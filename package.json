@@ -1,0 +1,28 @@
+{
+  "name": "xsvd",
+  "version": "0.1.0",
+  "description": "The xPack SVD manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xpack/xsvd-js.git"
+  },
+  "keywords": [
+    "xpack",
+    "svd",
+    "cmsis"
+  ],
+  "author": {
+    "name": "Liviu Ionescu",
+    "email": "ilg@livius.net",
+    "url": "http://liviusdotnet.wordpress.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xpack/xsvd-js/issues"
+  },
+  "homepage": "https://github.com/xpack/xsvd-js#readme"
+}
