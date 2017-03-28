@@ -2,9 +2,12 @@
   "name": "xsvd",
   "version": "0.1.0",
   "description": "The xPack SVD manager",
-  "main": "index.js",
+  "main": "./module.js",
+  "bin": {
+    "xsvd": "./cli.js"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "standard"
   },
   "repository": {
     "type": "git",
@@ -24,5 +27,16 @@
   "bugs": {
     "url": "https://github.com/xpack/xsvd-js/issues"
   },
-  "homepage": "https://github.com/xpack/xsvd-js#readme"
+  "homepage": "https://github.com/xpack/xsvd-js",
+  "dependencies": {
+    "wscript-avoider": "~3.0.0"
+  },
+  "devDependencies": {
+    "standard": "*"
+  },
+  "peerDependencies": {},
+  "bundleDependencies": [],
+  "engines": {
+    "node": ">7.7.0"
+  }
 }
