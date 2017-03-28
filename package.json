@@ -2,9 +2,9 @@
   "name": "xsvd",
   "version": "0.1.1",
   "description": "The xPack SVD manager",
-  "main": "./module.js",
+  "main": "./lib/module.js",
   "bin": {
-    "xsvd": "./cli.js"
+    "xsvd": "./bin/xsvd.js"
   },
   "scripts": {
     "test": "standard"

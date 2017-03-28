@@ -31,43 +31,27 @@
 'use strict'
 
 /*
- * This file implements the CLI specific code. It prepares a context
- * and calls the module code.
+ * On POSIX platforms, when installing a global package,
+ * a symbolic link named `xsvd` is created
+ * in the `/usr/local/bin` folder, pointing to this file.
  *
- * On POSIX platforms, a symbolic link named `xsvd` is created when
- * installing this package; for the shell to run it, this file
- * must have executable rights.
- * On Windows, two forwarders are automatically created in the
- * `C:\Program Files\nodejs\` folder: `xsvd.cmd` for native use and
- * `xsvd` (a shell script) for optional POSIX environments like minGW.
+ * On Windows, when installing a global package,
+ * two forwarders are automatically created in the
+ * user `\AppData\Roaming\npm\node_modules\xsvd\bin` folder:
+ * - `xsvd.cmd`, for invocation from the Windows shell
+ * - `xsvd` (a shell script), for invokations from
+ * an optional POSIX environments like minGW.
+ *
+ * On all platforms, `process.argv[1]` will be the full path of
+ * this file, or the full path of the `xsvd` link, so, in case
+ * the program will need to be invoked with different names,
+ * this is the method to differentiate between them.
  */
 
-// ES6: `import { WscriptAvoider} from 'wscript-avoider'
-const WscriptAvoider = require('wscript-avoider').WscriptAvoider
+// ----------------------------------------------------------------------------
 
-const cmd = 'xsvd'
+const Cli = require('../lib/cli.js').Cli
 
-// Avoid running on WScript.
-WscriptAvoider.quitIfWscript(cmd)
-
-// Set the application name, to make `ps` output more readable.
-process.title = cmd
-
-// On POSIX, `process.argv0` is 'node' (uninteresting).
-console.log('argv0=' + process.argv0)
-// On POSIX, `process.argv[0]` is the node full path,
-// like `/usr/local/bin/node`.
-console.log('argv[0]=' + process.argv[0])
-// On POSIX, `process.argv[1]` is the full path of the invoking script,
-// either `/usr/local/bin/xsvd` or `.../cli.js`.
-console.log('argv[1]=' + process.argv[1])
-
-console.log(cmd + ' started')
-setTimeout(() => {
-  console.log(cmd + ' stopped')
-  process.exit(0)
-}, 5 * 1000)
-
-// const Xsvd = require('./module.js').Xsvd
+Cli.run()
 
 // ----------------------------------------------------------------------------
