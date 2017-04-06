@@ -1,6 +1,3 @@
-#!/usr/bin/env node
-// Mandatory shebang must point to `node` and this file must be executable.
-
 /*
  * This file is part of the xPack distribution
  *   (http://xpack.github.io).
@@ -33,34 +30,44 @@
 
 // ----------------------------------------------------------------------------
 
-/*
- * On POSIX platforms, when installing a global package,
- * a symbolic link named `xsvd` is created
- * in the `/usr/local/bin` folder (on macOS), or
- * in the `/usr/bin` folder (on Ubuntu), pointing to this file.
- *
- * On Windows, where symbolic links are not available,
- * when installing a global package,
- * two forwarders are automatically created in the
- * user `\AppData\Roaming\npm\node_modules\xsvd\bin` folder:
- * - `xsvd.cmd`, for invocation from the Windows command line
- * - `xsvd` (a shell script), for invokations from an optional
- * POSIX environments like minGW-w64, msys2, git shell, etc.
- *
- * On all platforms, `process.argv[1]` will be the full path of
- * this file, or the full path of the `xsvd` link, so, in case
- * the program will need to be invoked with different names,
- * this is the method to differentiate between them.
+/**
+ * Test the direct invocation as a module.
  */
 
 // ----------------------------------------------------------------------------
 
-// ES6: `import { Xsvd } from 'main.js'
-const Main = require('../lib/main.js').Main
+const test = require('tap').test
+
+const Common = require('../common.js').Common
+const CliApp = require('../../lib/utils/cli-app.js').CliApp
 
 // ----------------------------------------------------------------------------
 
-// TODO: use instances, not static classes.
-Main.start()
+let pack = null
+
+test('setup', async (t) => {
+  // Read in the package.json, to later compare version.
+  pack = await CliApp.readPackageJson()
+  t.ok(pack, 'package ok')
+  t.ok(pack.version.length > 0, 'version length > 0')
+  t.pass(`package ${pack.name}@${pack.version}`)
+  t.end()
+})
+
+test('xsvd --version (module call)', async (t) => {
+  try {
+    const { code, stdout, stderr } = await Common.xsvdLib(['--version', '-ddd'])
+    // Check exit code.
+    t.equal(code, 0, 'exit 0')
+    // Check if version matches the package.
+    // Beware, the stdout string has a new line terminator.
+    t.equal(stdout, pack.version + '\n', 'version ok')
+    // There should be no error messages.
+    t.equal(stderr, '', 'stderr empty')
+  } catch (err) {
+    t.fail(err.stack)
+  }
+  t.end()
+})
 
 // ----------------------------------------------------------------------------

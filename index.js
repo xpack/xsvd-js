@@ -28,35 +28,33 @@
 'use strict'
 
 /**
- * This is the Xsvd module entry point, the file that is processed when
- * `require()` is called.
+ * This is the module entry point, the file that is processed when
+ * `require('<module>')` is called.
  *
- * For this to work, it must be linked from `package.json`
- * as `"main": "./lib/module.js",`.
+ * For this to work, it must be linked from `package.json` as
+ * `"main": "./index.js",`, which is, BTW, the default behaviour.
  *
  * To import classes from this module into Node.js applications, use:
  *
  * ```javascript
- * const Xsvd = require('xsvd').Xsvd
+ * const Main = require('<module>').Main
  * ```
  */
 
-// export
-class Xsvd {
-
-}
+// ES6: `import { Main } from './lib/main.js'
+const Main = require('./lib/main.js').Main
 
 // ----------------------------------------------------------------------------
 // Node.js specific export definitions.
 
 // By default, `module.exports = {}`.
-// The Xsvd class is added as a property to this object.
+// The Main class is added as a property with the same name to this object.
 
-module.exports.Xsvd = Xsvd
+module.exports.Main = Main
 
 // In ES6, it would be:
-// export class Xsvd { ... }
+// export class Main { ... }
 // ...
-// import { Xsvd } from 'xsvd'
+// import { Main } from 'module.js'
 
 // ----------------------------------------------------------------------------
