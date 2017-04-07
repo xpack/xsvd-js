@@ -26,17 +26,17 @@
  */
 
 'use strict'
-
-/* eslint valid-jsdoc: "error" */
+// eslint valid-jsdoc: "error"
 
 // ----------------------------------------------------------------------------
 
+const assert = require('assert')
 const spawn = require('child_process').spawn
 const Console = require('console').Console
 const Writable = require('stream').Writable
 
 // ES6: `import { CliHelp } from './utils/cli-helps.js'
-const Xsvd = require('../lib/main.js').Main
+const Xsvd = require('../lib/main.js').Xsvd
 
 // ----------------------------------------------------------------------------
 
@@ -108,6 +108,7 @@ class Common {
    *
    */
   static async xsvdLib (args, ctx = null) {
+    assert(Xsvd !== null, 'No application class')
     // Create two streams to local strings.
     let stdout = ''
     const ostream = new Writable({

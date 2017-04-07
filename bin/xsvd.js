@@ -29,7 +29,7 @@
  */
 
 'use strict'
-/* eslint valid-jsdoc: "error" */
+// eslint valid-jsdoc: "error"
 
 // ----------------------------------------------------------------------------
 
@@ -56,11 +56,11 @@
 // ----------------------------------------------------------------------------
 
 // ES6: `import { Xsvd } from 'main.js'
-const Main = require('../lib/main.js').Main
+const Xsvd = require('../lib/main.js').Xsvd
 
 // ----------------------------------------------------------------------------
 
 // TODO: use instances, not static classes.
-Main.start()
+Xsvd.start()
 
 // ----------------------------------------------------------------------------

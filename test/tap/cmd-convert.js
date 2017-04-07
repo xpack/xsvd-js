@@ -26,7 +26,7 @@
  */
 
 'use strict'
-/* eslint valid-jsdoc: "error" */
+// eslint valid-jsdoc: "error"
 
 // ----------------------------------------------------------------------------
 

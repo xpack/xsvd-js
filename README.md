@@ -5,7 +5,7 @@ TBD
 
 ## Tests
 
-The tests will use the `[node-tap](http://www.node-tap.org)` framework ('A Test-Anything-Protocol library for Node.js', written by Isaac Schlueter).
+The tests will use the [`node-tap`](http://www.node-tap.org) framework ('A Test-Anything-Protocol library for Node.js', written by Isaac Schlueter).
 
 ## Style guide
 

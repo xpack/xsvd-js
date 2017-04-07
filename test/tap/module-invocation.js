@@ -26,7 +26,7 @@
  */
 
 'use strict'
-/* eslint valid-jsdoc: "error" */
+// eslint valid-jsdoc: "error"
 
 // ----------------------------------------------------------------------------
 
@@ -38,17 +38,26 @@
 
 // The `[node-tap](http://www.node-tap.org)` framework.
 const test = require('tap').test
+const path = require('path')
+
+// The Mocha-like DSL http://www.node-tap.org/mochalike/
+// require('tap').mochaGlobals()
+// const should = require('should') // eslint-disable-line no-unused-vars
+// /* global describe, context, it */
 
 const Common = require('../common.js').Common
-const CliApp = require('../../lib/utils/cli-app.js').CliApp
+
+// ES6: `import { CliApp } from 'cli-start-options.js'
+const CliApp = require('@ilg/cli-start-options').CliApp
 
 // ----------------------------------------------------------------------------
 
 let pack = null
+const rootPath = path.dirname(path.dirname(__dirname))
 
 test('setup', async (t) => {
   // Read in the package.json, to later compare version.
-  pack = await CliApp.readPackageJson()
+  pack = await CliApp.readPackageJson(rootPath)
   t.ok(pack, 'package ok')
   t.ok(pack.version.length > 0, 'version length > 0')
   t.pass(`package ${pack.name}@${pack.version}`)
@@ -70,5 +79,16 @@ test('xsvd --version (module call)', async (t) => {
   }
   t.end()
 })
+
+/*
+describe('setup', () => {
+  context('when reading package.json', async function () {
+    // Read in the package.json, to later compare version.
+    pack = await CliApp.readPackageJson()
+    it('json object exists', () => { pack.should.not.equal(null) })
+    it('version string is not empty', () => { pack.version.should.be.type('string').and.not.be.empty() })
+  })
+})
+*/
 
 // ----------------------------------------------------------------------------

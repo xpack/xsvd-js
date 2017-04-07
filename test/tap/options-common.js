@@ -38,18 +38,20 @@
 
 // The `[node-tap](http://www.node-tap.org)` framework.
 const test = require('tap').test
+const path = require('path')
 
 const Common = require('../common.js').Common
 
-const CliApp = require('../../lib/utils/cli-app.js').CliApp
+const CliApp = require('@ilg/cli-start-options').CliApp
 
 // ----------------------------------------------------------------------------
 
 let pack = null
+const rootPath = path.dirname(path.dirname(__dirname))
 
 test('setup', async (t) => {
   // Read in the package.json, to later compare version.
-  pack = await CliApp.readPackageJson()
+  pack = await CliApp.readPackageJson(rootPath)
   t.ok(pack, 'package ok')
   t.ok(pack.version.length > 0, 'version length > 0')
   t.pass(`package ${pack.name}@${pack.version}`)

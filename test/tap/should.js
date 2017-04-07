@@ -31,13 +31,19 @@
 // ----------------------------------------------------------------------------
 
 /**
- * The `xsvd code ...` command implementation.
+ * Test BDD 'should' assertions.
  */
 
 // ----------------------------------------------------------------------------
 
-// ES6: `import { CliCmd } from 'cli-start-options.js'
-const CliCmd = require('@ilg/cli-start-options').CliCmd
+// The `[node-tap](http://www.node-tap.org)` framework.
+// const test = require('tap').test
+
+// The Mocha-like DSL http://www.node-tap.org/mochalike/
+require('tap').mochaGlobals()
+const should = require('should') // eslint-disable-line no-unused-vars
+
+/* global describe, context, it */
 
 // ----------------------------------------------------------------------------
 
@@ -50,35 +56,54 @@ const doSomethingAsync = function (n) {
   })
 }
 
-// ============================================================================
-
-// export
-class Code extends CliCmd {
-  // --------------------------------------------------------------------------
-
-  /**
-   * @summary Execute the `code` command.
-   *
-   * @param {string[]} argv Command line arguments.
-   * @returns {number} Return code.
-   */
-  // Override
-  async run (argv) {
-    this.context.console.log('code')
-    return await doSomethingAsync(100)
-  }
-}
-
 // ----------------------------------------------------------------------------
-// Node.js specific export definitions.
 
-// By default, `module.exports = {}`.
-// The Convert class is added as a property of this object.
-module.exports.Code = Code
+describe('async it()', function () {
+  var array = [1, 2, 3]
+  context('when item is not found', function () {
+    it('does not throw an error', function () {
+      array.indexOf(4)
+    })
+    it('calls async', async function () {
+      let ret = await doSomethingAsync(100)
+      ret.should.equal(0)
+    })
+    it('returns -1', function () {
+      array.indexOf(4).should.equal(-1)
+    })
+  })
+})
 
-// In ES6, it would be:
-// export class Convert { ... }
-// ...
-// import { Code } from 'code.js'
+describe('async context()', function () {
+  var array = [1, 2, 3]
+  context('when item is not found', async function () {
+    let ret = await doSomethingAsync(100)
+    it('does not throw an error', function () {
+      array.indexOf(4)
+    })
+    it('checks async return', function () {
+      ret.should.equal(0)
+    })
+    it('returns -1', function () {
+      array.indexOf(4).should.equal(-1)
+    })
+  })
+})
+
+describe('async describe()', async function () {
+  var array = [1, 2, 3]
+  let ret = await doSomethingAsync(100)
+  context('when item is not found', function () {
+    it('does not throw an error', function () {
+      array.indexOf(4)
+    })
+    it('checks async return', function () {
+      ret.should.equal(0)
+    })
+    it('returns -1', function () {
+      array.indexOf(4).should.equal(-1)
+    })
+  })
+})
 
 // ----------------------------------------------------------------------------
