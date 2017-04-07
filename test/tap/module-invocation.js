@@ -36,6 +36,7 @@
 
 // ----------------------------------------------------------------------------
 
+// The `[node-tap](http://www.node-tap.org)` framework.
 const test = require('tap').test
 
 const Common = require('../common.js').Common
