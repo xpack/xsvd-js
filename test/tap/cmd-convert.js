@@ -43,14 +43,48 @@ const Common = require('../common.js').Common
 
 // ----------------------------------------------------------------------------
 
+/**
+ * Test if with empty line fails with mandatory error and displays help.
+ */
 test('xsvd convert', async (t) => {
   try {
     const { code, stdout, stderr } = await Common.xsvdCli(['convert'])
     // Check exit code.
+    t.equal(code, 1, 'exit 1')
+    const errLines = stderr.split(/\r?\n/)
+    // console.log(errLines)
+    t.ok(errLines.length === 3, 'has two errors')
+    t.equal(errLines[0], 'Mandatory \'--file\' not found.',
+      'has --file error')
+    t.equal(errLines[1], 'Mandatory \'--output\' not found.',
+      'has --output error')
+    t.match(stdout, 'Usage: xsvd convert [options...]', 'has Usage')
+  } catch (err) {
+    t.fail(err.message)
+  }
+  t.end()
+})
+
+/**
+ * Test if help content includes convert options.
+ */
+test('xsvd code -h', async (t) => {
+  try {
+    const { code, stdout, stderr } = await Common.xsvdCli(['convert', '-h'])
+    // Check exit code.
     t.equal(code, 0, 'exit 0')
-    // Check preliminary output.
-    // Beware, the stdout string has a new line terminator.
-    t.equal(stdout, 'convert\n', 'ok')
+    const outLines = stdout.split(/\r?\n/)
+    t.ok(outLines.length > 9, 'has enough output')
+    if (outLines.length > 9) {
+      // console.log(outLines)
+      t.equal(outLines[1], 'Convert an ARM SVD file from XML to JSON',
+        'has title')
+      t.equal(outLines[2], 'Usage: xsvd convert [options...] ' +
+        '--file <file> --output <file>', 'has Usage')
+      t.match(outLines[4], 'Convert options:', 'has convert options')
+      t.match(outLines[5], '  --file <file>  ', 'has --file')
+      t.match(outLines[6], '  --output <file>  ', 'has --output')
+    }
     // There should be no error messages.
     t.equal(stderr, '', 'stderr empty')
   } catch (err) {

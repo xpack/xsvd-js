@@ -42,7 +42,7 @@ const path = require('path')
 
 const Common = require('../common.js').Common
 
-const CliApp = require('@ilg/cli-start-options').CliApp
+const CliApplication = require('@ilg/cli-start-options').CliApplication
 
 // ----------------------------------------------------------------------------
 
@@ -51,7 +51,7 @@ const rootPath = path.dirname(path.dirname(__dirname))
 
 test('setup', async (t) => {
   // Read in the package.json, to later compare version.
-  pack = await CliApp.readPackageJson(rootPath)
+  pack = await CliApplication.readPackageJson(rootPath)
   t.ok(pack, 'package ok')
   t.ok(pack.version.length > 0, 'version length > 0')
   t.pass(`package ${pack.name}@${pack.version}`)
@@ -85,7 +85,7 @@ test('xsvd -h (spawn)', async (t) => {
     t.match(stdout, 'xsvd <command> -h|--help', 'has <command> -h|--help')
     t.match(stdout, 'xsvd --version', 'has --version')
     t.match(stdout, 'xsvd -i|--interactive', 'has -i|--interactive')
-    t.match(stdout, 'set log level (silent|warn|info|verbose|silly)', 'has log levels')
+    t.match(stdout, 'Set log level (silent|warn|info|verbose|silly)', 'has log levels')
     t.match(stdout, '-s|--silent', 'has -s|--silent')
     t.match(stdout, '--color|--colour <bool>', 'has --color')
     t.match(stdout, 'Bug reports:', 'has Bug reports:')

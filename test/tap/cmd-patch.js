@@ -43,14 +43,59 @@ const Common = require('../common.js').Common
 
 // ----------------------------------------------------------------------------
 
+/**
+ * Test if with empty line fails with mandatory error and displays help.
+ */
 test('xsvd patch', async (t) => {
   try {
     const { code, stdout, stderr } = await Common.xsvdCli(['patch'])
     // Check exit code.
+    t.equal(code, 1, 'exit 1')
+    const errLines = stderr.split(/\r?\n/)
+    // console.log(errLines)
+    t.ok(errLines.length === 4, 'has three errors')
+    if (errLines.length === 4) {
+      t.equal(errLines[0], 'Mandatory \'--file\' not found.',
+        'has --file error')
+      t.equal(errLines[1], 'Mandatory \'--patch\' not found.',
+        'has --patch error')
+      t.equal(errLines[2], 'Mandatory \'--output\' not found.',
+        'has --output error')
+    }
+    t.match(stdout, 'Usage: xsvd patch [options...]', 'has Usage')
+  } catch (err) {
+    t.fail(err.message)
+  }
+  t.end()
+})
+
+/**
+ * Test if help content includes convert options.
+ */
+test('xsvd patch -h', async (t) => {
+  try {
+    const { code, stdout, stderr } = await Common.xsvdCli(['patch', '-h'])
+    // Check exit code.
     t.equal(code, 0, 'exit 0')
-    // Check preliminary output.
-    // Beware, the stdout string has a new line terminator.
-    t.equal(stdout, 'patch\n', 'ok')
+    const outLines = stdout.split(/\r?\n/)
+    t.ok(outLines.length > 12, 'has enough output')
+    if (outLines.length > 12) {
+      // console.log(outLines)
+      t.equal(outLines[1], 'Modify SVD JSON file using a JSON patch',
+        'has title')
+      t.equal(outLines[2], 'Usage: xsvd patch [options...] ' +
+        '--file <file> --patch <file> --output <file>', 'has Usage')
+      t.equal(outLines[3], '                  [--group-bitfield <name>]* ' +
+        '[--remove <name>]*', 'has usage 2nd line')
+      t.match(outLines[5], 'Patch options:', 'has patch options')
+      t.match(outLines[6], '  --file <file>  ', 'has --file')
+      t.match(outLines[7], '  --patch <file>  ', 'has --patch')
+      t.match(outLines[8], '  --output <file>  ', 'has --output')
+      t.match(outLines[9], '  --group-bitfield <name>  ',
+        'has --group-bitfield')
+      t.match(outLines[10], '  --remove <name>  ',
+        'has --remove')
+    }
     // There should be no error messages.
     t.equal(stderr, '', 'stderr empty')
   } catch (err) {

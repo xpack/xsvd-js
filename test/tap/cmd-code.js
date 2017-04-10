@@ -43,14 +43,54 @@ const Common = require('../common.js').Common
 
 // ----------------------------------------------------------------------------
 
+/**
+ * Test if with empty line fails with mandatory error and displays help.
+ */
 test('xsvd code', async (t) => {
   try {
     const { code, stdout, stderr } = await Common.xsvdCli(['code'])
     // Check exit code.
+    t.equal(code, 1, 'exit 1')
+    const errLines = stderr.split(/\r?\n/)
+    // console.log(errLines)
+    t.ok(errLines.length === 2, 'has one error')
+    if (errLines.length === 2) {
+      t.equal(errLines[0], 'Mandatory \'--file\' not found.',
+        'has --file error')
+    }
+    t.match(stdout, 'Usage: xsvd code [options...]', 'has Usage')
+  } catch (err) {
+    t.fail(err.message)
+  }
+  t.end()
+})
+
+/**
+ * Test if help content includes code options.
+ */
+test('xsvd code -h', async (t) => {
+  try {
+    const { code, stdout, stderr } = await Common.xsvdCli(['code', '-h'])
+    // Check exit code.
     t.equal(code, 0, 'exit 0')
-    // Check preliminary output.
-    // Beware, the stdout string has a new line terminator.
-    t.equal(stdout, 'code\n', 'ok')
+    const outLines = stdout.split(/\r?\n/)
+    t.ok(outLines.length > 13, 'has enough output')
+    if (outLines.length > 13) {
+      t.equal(outLines[1], 'Generate QEMU peripheral source files for ' +
+        'a given family', 'has title')
+      t.equal(outLines[2], 'Usage: xsvd code [options...] ' +
+        '--file <file> --dest <folder>', 'has Usage')
+      t.equal(outLines[3], '                 --vendor-prefix <string> ' +
+        '--device-family <string>', 'has usage 2nd line')
+      t.equal(outLines[4], '                 --device-selector <string>',
+        'has usage 3rd line')
+      t.match(outLines[6], 'Code options:', 'has code options')
+      t.match(outLines[7], '  --file <file>  ', 'has --file')
+      t.match(outLines[8], '  --dest <folder>  ', 'has --dest')
+      t.match(outLines[9], '  --vendor-prefix <string>  ', 'has --vendor-prefix')
+      t.match(outLines[10], '  --device-family <string>  ', 'has --device-family')
+      t.match(outLines[11], '  --device-selector <string>  ', 'has --device-selector')
+    }
     // There should be no error messages.
     t.equal(stderr, '', 'stderr empty')
   } catch (err) {

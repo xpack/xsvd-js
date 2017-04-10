@@ -47,8 +47,8 @@ const path = require('path')
 
 const Common = require('../common.js').Common
 
-// ES6: `import { CliApp } from 'cli-start-options.js'
-const CliApp = require('@ilg/cli-start-options').CliApp
+// ES6: `import { CliApplication } from 'cli-start-options.js'
+const CliApplication = require('@ilg/cli-start-options').CliApplication
 
 // ----------------------------------------------------------------------------
 
@@ -57,7 +57,7 @@ const rootPath = path.dirname(path.dirname(__dirname))
 
 test('setup', async (t) => {
   // Read in the package.json, to later compare version.
-  pack = await CliApp.readPackageJson(rootPath)
+  pack = await CliApplication.readPackageJson(rootPath)
   t.ok(pack, 'package ok')
   t.ok(pack.version.length > 0, 'version length > 0')
   t.pass(`package ${pack.name}@${pack.version}`)
@@ -84,7 +84,7 @@ test('xsvd --version (module call)', async (t) => {
 describe('setup', () => {
   context('when reading package.json', async function () {
     // Read in the package.json, to later compare version.
-    pack = await CliApp.readPackageJson()
+    pack = await CliApplication.readPackageJson()
     it('json object exists', () => { pack.should.not.equal(null) })
     it('version string is not empty', () => { pack.version.should.be.type('string').and.not.be.empty() })
   })
