@@ -26,7 +26,8 @@
  */
 
 'use strict'
-// eslint valid-jsdoc: "error"
+/* eslint valid-jsdoc: "error" */
+/* eslint max-len: [ "error", 80, { "ignoreUrls": true } ] */
 
 // ----------------------------------------------------------------------------
 
@@ -87,9 +88,12 @@ test('xsvd code -h', async (t) => {
       t.match(outLines[6], 'Code options:', 'has code options')
       t.match(outLines[7], '  --file <file>  ', 'has --file')
       t.match(outLines[8], '  --dest <folder>  ', 'has --dest')
-      t.match(outLines[9], '  --vendor-prefix <string>  ', 'has --vendor-prefix')
-      t.match(outLines[10], '  --device-family <string>  ', 'has --device-family')
-      t.match(outLines[11], '  --device-selector <string>  ', 'has --device-selector')
+      t.match(outLines[9], '  --vendor-prefix <string>  ',
+        'has --vendor-prefix')
+      t.match(outLines[10], '  --device-family <string>  ',
+        'has --device-family')
+      t.match(outLines[11], '  --device-selector <string>  ',
+        'has --device-selector')
     }
     // There should be no error messages.
     t.equal(stderr, '', 'stderr empty')

@@ -26,7 +26,8 @@
  */
 
 'use strict'
-// eslint valid-jsdoc: "error"
+/* eslint valid-jsdoc: "error" */
+/* eslint max-len: [ "error", 80, { "ignoreUrls": true } ] */
 
 // ----------------------------------------------------------------------------
 
@@ -46,7 +47,8 @@ const Xsvd = require('../lib/main.js').Xsvd
 
 // ----------------------------------------------------------------------------
 
-const nodeBin = process.env.npm_node_execpath || process.env.NODE || process.execPath
+const nodeBin = process.env.npm_node_execpath || process.env.NODE ||
+  process.execPath
 const executableName = './bin/xsvd.js'
 const pgmName = 'xsvd'
 
