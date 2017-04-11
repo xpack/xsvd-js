@@ -87,7 +87,8 @@ describe('setup', () => {
     // Read in the package.json, to later compare version.
     pack = await CliApplication.readPackageJson()
     it('json object exists', () => { pack.should.not.equal(null) })
-    it('version string is not empty', () => { pack.version.should.be.type('string').and.not.be.empty() })
+    it('version string is not empty', () => {
+      pack.version.should.be.type('string').and.not.be.empty() })
   })
 })
 */

@@ -86,7 +86,8 @@ test('xsvd -h (spawn)', async (t) => {
     t.match(stdout, 'xsvd <command> -h|--help', 'has <command> -h|--help')
     t.match(stdout, 'xsvd --version', 'has --version')
     t.match(stdout, 'xsvd -i|--interactive', 'has -i|--interactive')
-    t.match(stdout, 'Set log level (silent|warn|info|verbose|silly)', 'has log levels')
+    t.match(stdout, 'Set log level (silent|warn|info|verbose|silly)',
+      'has log levels')
     t.match(stdout, '-s|--silent', 'has -s|--silent')
     t.match(stdout, '--color|--colour <bool>', 'has --color')
     t.match(stdout, 'Bug reports:', 'has Bug reports:')
