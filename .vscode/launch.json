@@ -93,6 +93,28 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "xsvd con -h",
+      "program": "${workspaceRoot}/bin/xsvd.js",
+      "stopOnEntry": true,
+      "args": [
+        "con",
+        "-h"
+      ],
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": null,
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "internalConsole",
+      "sourceMaps": false
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "xsvd patch -h",
       "program": "${workspaceRoot}/bin/xsvd.js",
       "stopOnEntry": true,
