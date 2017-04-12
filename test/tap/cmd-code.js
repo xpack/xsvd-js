@@ -56,7 +56,7 @@ test('xsvd code', async (t) => {
     // console.log(errLines)
     t.ok(errLines.length === 2, 'has one error')
     if (errLines.length === 2) {
-      t.equal(errLines[0], 'Mandatory \'--file\' not found.',
+      t.match(errLines[0], 'Mandatory \'--file\' not found.',
         'has --file error')
     }
     t.match(stdout, 'Usage: xsvd code [options...]', 'has Usage')
@@ -94,6 +94,30 @@ test('xsvd code -h', async (t) => {
         'has --device-family')
       t.match(outLines[11], '  --device-selector <string>  ',
         'has --device-selector')
+    }
+    // There should be no error messages.
+    t.equal(stderr, '', 'stderr empty')
+  } catch (err) {
+    t.fail(err.message)
+  }
+  t.end()
+})
+
+/**
+ * Test if partial command recognised and expanded.
+ */
+test('xsvd cod -h', async (t) => {
+  try {
+    const { code, stdout, stderr } = await Common.xsvdCli(['cod', '-h'])
+    // Check exit code.
+    t.equal(code, 0, 'exit 0')
+    const outLines = stdout.split(/\r?\n/)
+    t.ok(outLines.length > 13, 'has enough output')
+    if (outLines.length > 13) {
+      t.equal(outLines[1], 'Generate QEMU peripheral source files for ' +
+        'a given family', 'has title')
+      t.equal(outLines[2], 'Usage: xsvd code [options...] ' +
+        '--file <file> --dest <folder>', 'has Usage')
     }
     // There should be no error messages.
     t.equal(stderr, '', 'stderr empty')

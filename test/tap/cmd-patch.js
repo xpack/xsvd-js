@@ -56,11 +56,11 @@ test('xsvd patch', async (t) => {
     // console.log(errLines)
     t.ok(errLines.length === 4, 'has three errors')
     if (errLines.length === 4) {
-      t.equal(errLines[0], 'Mandatory \'--file\' not found.',
+      t.match(errLines[0], 'Mandatory \'--file\' not found.',
         'has --file error')
-      t.equal(errLines[1], 'Mandatory \'--patch\' not found.',
+      t.match(errLines[1], 'Mandatory \'--patch\' not found.',
         'has --patch error')
-      t.equal(errLines[2], 'Mandatory \'--output\' not found.',
+      t.match(errLines[2], 'Mandatory \'--output\' not found.',
         'has --output error')
     }
     t.match(stdout, 'Usage: xsvd patch [options...]', 'has Usage')
@@ -96,6 +96,31 @@ test('xsvd patch -h', async (t) => {
         'has --group-bitfield')
       t.match(outLines[10], '  --remove <name>  ',
         'has --remove')
+    }
+    // There should be no error messages.
+    t.equal(stderr, '', 'stderr empty')
+  } catch (err) {
+    t.fail(err.message)
+  }
+  t.end()
+})
+
+/**
+ * Test if partial command recognised and expanded.
+ */
+test('xsvd p -h', async (t) => {
+  try {
+    const { code, stdout, stderr } = await Common.xsvdCli(['p', '-h'])
+    // Check exit code.
+    t.equal(code, 0, 'exit 0')
+    const outLines = stdout.split(/\r?\n/)
+    t.ok(outLines.length > 12, 'has enough output')
+    if (outLines.length > 12) {
+      // console.log(outLines)
+      t.equal(outLines[1], 'Modify SVD JSON file using a JSON patch',
+        'has title')
+      t.equal(outLines[2], 'Usage: xsvd patch [options...] ' +
+        '--file <file> --patch <file> --output <file>', 'has Usage')
     }
     // There should be no error messages.
     t.equal(stderr, '', 'stderr empty')

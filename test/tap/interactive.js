@@ -159,18 +159,19 @@ test('xsvd -i (spawn)', (t) => {
           t.test('code', (t) => {
             t.match(stdout, 'Usage: xsvd code [options...] --file <file> ' +
               '--dest <folder>', 'has code Usage')
-            t.equal(stderr, '', 'stderr empty')
+            t.match(stderr, 'Mandatory \'--file\' not found.',
+              '--file not found')
             t.end()
           })
 
           ostr = 'xyz'
         } else if (count === 6) {
           t.test('xyz', (t) => {
-            t.match(stdout, `Command 'xyz' not supported.`,
+            t.match(stderr, `Command 'xyz' not supported.`,
               'xyz is not supported')
             t.match(stdout, 'Usage: xsvd <command> [<subcommand>...]',
               'has Usage')
-            t.equal(stderr, '', 'stderr empty')
+            // t.equal(stderr, '', 'stderr empty')
             t.end()
           })
 
