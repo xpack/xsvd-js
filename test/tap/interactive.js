@@ -46,6 +46,8 @@ const path = require('path')
 
 const CliApplication = require('@ilg/cli-start-options').CliApplication
 
+const debug = true
+
 // ----------------------------------------------------------------------------
 
 const nodeBin = process.env.npm_node_execpath || process.env.NODE ||
@@ -73,14 +75,18 @@ test('xsvd -i (spawn)', (t) => {
 
   // t.plan(0)
   child.on('error', (err) => {
-    console.log('error')
+    if (debug) {
+      console.log('error')
+    }
     t.fail(err.message)
     t.end()
   })
 
   child.on('close', (code) => {
     // Check exit code.
-    // console.log('close')
+    if (debug) {
+      console.log('close')
+    }
     t.equal(code, 0, 'exit 0')
     t.end()
   })
@@ -88,7 +94,9 @@ test('xsvd -i (spawn)', (t) => {
   let stderr = ''
   if (child.stderr) {
     child.stderr.on('data', (chunk) => {
-      console.log(chunk)
+      if (debug) {
+        console.log(chunk)
+      }
       stderr += chunk
     })
   }
@@ -98,63 +106,88 @@ test('xsvd -i (spawn)', (t) => {
   if (child.stdout) {
     child.stdout.on('data', (chunk) => {
       // console.log(chunk)
-      let str = '' + chunk
-      // console.log(`got ${str}`)
+      stdout += chunk
       let ostr = null
-      if (str === 'xsvd> ') {
-        // console.log(stdout)
+      if (stdout.endsWith('xsvd> ')) {
+        stdout = stdout.replace('xsvd> ', '')
+        if (debug) {
+          console.log(stdout)
+        }
         // A small state machine to check the conditions after each
         // new prompt identified.
         if (count === 0) {
-          t.ok(true, 'prompt ok')
-          t.equal(stderr, '', 'stderr empty')
+          t.test('first prompt', (t) => {
+            t.ok(true, 'prompt ok')
+            t.equal(stderr, '', 'stderr empty')
+            t.end()
+          })
 
           ostr = '--version'
         } else if (count === 1) {
-          t.equal(stdout, pack.version + '\n', 'version ok')
+          t.test('--version', (t) => {
+            t.equal(stdout, pack.version + '\n', 'version ok')
+            t.end()
+          })
 
           ostr = '-h'
         } else if (count === 2) {
-          t.match(stdout, 'Usage: xsvd <command> [<subcommand>...]',
-            'has Usage')
-          t.equal(stderr, '', 'stderr empty')
+          t.test('-h', (t) => {
+            t.match(stdout, 'Usage: xsvd <command> [<subcommand>...]',
+              'has Usage')
+            t.equal(stderr, '', 'stderr empty')
+            t.end()
+          })
 
           ostr = '--version'
         } else if (count === 3) {
-          t.equal(stdout, pack.version + '\n', 'version ok again')
+          t.test('--version again', (t) => {
+            t.equal(stdout, pack.version + '\n', 'version ok')
+            t.end()
+          })
 
           ostr = 'code -h'
         } else if (count === 4) {
-          t.match(stdout, 'Usage: xsvd code [options...] --file <file> ' +
-            '--dest <folder>', 'has code Usage')
-          t.equal(stderr, '', 'stderr empty')
+          t.test('code -h', (t) => {
+            t.match(stdout, 'Usage: xsvd code [options...] --file <file> ' +
+              '--dest <folder>', 'has code Usage')
+            t.equal(stderr, '', 'stderr empty')
+            t.end()
+          })
 
           ostr = 'code'
         } else if (count === 5) {
-          t.match(stdout, 'Usage: xsvd code [options...] --file <file> ' +
-            '--dest <folder>', 'has code Usage')
-          t.equal(stderr, '', 'stderr empty')
+          t.test('code', (t) => {
+            t.match(stdout, 'Usage: xsvd code [options...] --file <file> ' +
+              '--dest <folder>', 'has code Usage')
+            t.equal(stderr, '', 'stderr empty')
+            t.end()
+          })
 
           ostr = 'xyz'
         } else if (count === 6) {
-          t.match(stdout, `Command 'xyz' not supported.`,
-            'xyz is not supported')
-          t.match(stdout, 'Usage: xsvd <command> [<subcommand>...]',
-            'has Usage')
-          t.equal(stderr, '', 'stderr empty')
+          t.test('xyz', (t) => {
+            t.match(stdout, `Command 'xyz' not supported.`,
+              'xyz is not supported')
+            t.match(stdout, 'Usage: xsvd <command> [<subcommand>...]',
+              'has Usage')
+            t.equal(stderr, '', 'stderr empty')
+            t.end()
+          })
 
           ostr = '.exit'
         }
         if (ostr) {
-          // console.log(`sent ${ostr}`)
+          if (debug) {
+            console.log(`sent ${ostr}`)
+          }
           child.stdin.write(ostr + '\n')
         }
         count++
-        // console.log(count)
+        if (debug) {
+          console.log(count)
+        }
         stdout = ''
         stderr = ''
-      } else {
-        stdout += str
       }
     })
   }
