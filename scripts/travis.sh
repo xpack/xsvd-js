@@ -78,7 +78,6 @@ function do_script() {
   echo
   echo "Performing the tests..."
 
-  do_run npm run tap test/tap/interactive.js -s
   do_run npm test
 
   echo

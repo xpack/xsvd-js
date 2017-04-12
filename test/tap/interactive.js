@@ -46,7 +46,7 @@ const path = require('path')
 
 const CliApplication = require('@ilg/cli-start-options').CliApplication
 
-const debug = true
+const debug = false
 
 // ----------------------------------------------------------------------------
 
