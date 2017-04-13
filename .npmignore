@@ -1,7 +1,7 @@
 # .gitignore is not automatically included, add relevant lines again.
 
 # npm
-*.tgz
+/*.tgz
 
 # VS Code
 .vscode/

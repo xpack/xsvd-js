@@ -37,7 +37,7 @@ jspm_packages
 .node_repl_history
 
 # Archives
-*.tgz
+/*.tgz
 
 # VS Code
 vscode.mac.command

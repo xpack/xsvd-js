@@ -37,10 +37,26 @@
 
 // ----------------------------------------------------------------------------
 
+const path = require('path')
+const os = require('os')
+const fs = require('fs')
+
 // The `[node-tap](http://www.node-tap.org)` framework.
 const test = require('tap').test
 
 const Common = require('../common.js').Common
+const Promisifier = require('../../lib/utils/asy.js')
+
+// ----------------------------------------------------------------------------
+
+const fixtures = path.resolve(__dirname, '../fixtures')
+const workFolder = path.resolve(os.tmpdir(), 'xsvd-convert')
+const rimraf = Promisifier.promisify(require('rimraf'))
+
+// Promisified functions from the Node.js callbacks library.
+if (!fs.chmodPromise) {
+  fs.chmodPromise = Promisifier.promisify(fs.chmod)
+}
 
 // ----------------------------------------------------------------------------
 
@@ -49,7 +65,9 @@ const Common = require('../common.js').Common
  */
 test('xsvd convert', async (t) => {
   try {
-    const { code, stdout, stderr } = await Common.xsvdCli(['convert'])
+    const { code, stdout, stderr } = await Common.xsvdCli([
+      'convert'
+    ])
     // Check exit code.
     t.equal(code, 1, 'exit 1')
     const errLines = stderr.split(/\r?\n/)
@@ -71,7 +89,10 @@ test('xsvd convert', async (t) => {
  */
 test('xsvd convert -h', async (t) => {
   try {
-    const { code, stdout, stderr } = await Common.xsvdCli(['convert', '-h'])
+    const { code, stdout, stderr } = await Common.xsvdCli([
+      'convert',
+      '-h'
+    ])
     // Check exit code.
     t.equal(code, 0, 'exit 0')
     const outLines = stdout.split(/\r?\n/)
@@ -99,7 +120,10 @@ test('xsvd convert -h', async (t) => {
  */
 test('xsvd con -h', async (t) => {
   try {
-    const { code, stdout, stderr } = await Common.xsvdCli(['con', '-h'])
+    const { code, stdout, stderr } = await Common.xsvdCli([
+      'con',
+      '-h'
+    ])
     // Check exit code.
     t.equal(code, 0, 'exit 0')
     const outLines = stdout.split(/\r?\n/)
@@ -117,6 +141,98 @@ test('xsvd con -h', async (t) => {
     t.fail(err.message)
   }
   t.end()
+})
+
+/**
+ * Test missing input file.
+ */
+test('xsvd con --file xxx --output yyy', async (t) => {
+  try {
+    const { code, stdout, stderr } = await Common.xsvdCli([
+      'con',
+      '--file',
+      'xxx',
+      '--output',
+      'yyy'
+    ])
+    // Check exit code.
+    t.equal(code, 3, 'exit 3')
+    // There should be no output.
+    t.equal(stdout, '', 'stdout empty')
+    t.match(stderr, 'ENOENT: no such file or directory', 'ENOENT')
+  } catch (err) {
+    t.fail(err.message)
+  }
+  t.end()
+})
+
+test('unpack', async (t) => {
+  const tgzPath = path.resolve(fixtures, 'STM32F0x0.svd.tgz')
+  t.doesNotThrow(async () => {
+    await Common.extractTgz(tgzPath, workFolder)
+  }, 'STM32F0x0.svd.tgz unpacked into ' + workFolder)
+  t.end()
+})
+
+const filePath = path.resolve(workFolder, 'STM32F0x0.svd')
+
+test('xsvd con --file STM32F0x0.svd --output STM32F0x0.json', async (t) => {
+  try {
+    const outPath = path.resolve(workFolder, 'STM32F0x0.json')
+    const { code, stdout, stderr } = await Common.xsvdCli([
+      'con',
+      '--file',
+      filePath,
+      '--output',
+      outPath
+    ])
+    // Check exit code.
+    t.equal(code, 0, 'exit 0')
+    t.equal(stdout, '', 'no output')
+    // console.log(stdout)
+    t.equal(stderr, '', 'no errors')
+    // console.log(stderr)
+
+    const fileContent = await fs.readFilePromise(outPath)
+    t.ok(fileContent, 'read in')
+    const json = JSON.parse(fileContent.toString())
+    t.ok(json, 'json parsed')
+    t.match(json.warning, 'DO NOT EDIT!', 'has warning')
+    t.ok(json.device, 'has device')
+  } catch (err) {
+    t.fail(err.message)
+  }
+  t.end()
+})
+
+test('xsvd con --file STM32F0x0.svd --output STM32F0x0.json -v', async (t) => {
+  try {
+    const outPath = path.resolve(workFolder, 'STM32F0x0.json')
+    const { code, stdout, stderr } = await Common.xsvdCli([
+      'con',
+      '--file',
+      filePath,
+      '--output',
+      outPath,
+      '-v'
+    ])
+    // Check exit code.
+    t.equal(code, 0, 'exit 0')
+    t.match(stdout, 'Done.', 'done message')
+    // console.log(stdout)
+    t.equal(stderr, '', 'no errors')
+    // console.log(stderr)
+  } catch (err) {
+    t.fail(err.message)
+  }
+  t.end()
+})
+
+test('cleanup', async (t) => {
+  await fs.chmodPromise(filePath, 0o666)
+  t.pass('chmod')
+  await rimraf(workFolder)
+  t.pass('tmpdir removed')
 })
 
 // ----------------------------------------------------------------------------

@@ -61,7 +61,9 @@ test('setup', async (t) => {
 
 test('xsvd --version (spawn)', async (t) => {
   try {
-    const { code, stdout, stderr } = await Common.xsvdCli(['--version'])
+    const { code, stdout, stderr } = await Common.xsvdCli([
+      '--version'
+    ])
     // Check exit code.
     t.equal(code, 0, 'exit 0')
     // Check if version matches the package.
@@ -77,7 +79,9 @@ test('xsvd --version (spawn)', async (t) => {
 
 test('xsvd -h (spawn)', async (t) => {
   try {
-    const { code, stdout, stderr } = await Common.xsvdCli(['-h'])
+    const { code, stdout, stderr } = await Common.xsvdCli([
+      '-h'
+    ])
     t.equal(code, 0, 'exit 0')
     t.match(stdout, 'Usage: xsvd <command>', 'has Usage')
 
@@ -86,10 +90,9 @@ test('xsvd -h (spawn)', async (t) => {
     t.match(stdout, 'xsvd <command> -h|--help', 'has <command> -h|--help')
     t.match(stdout, 'xsvd --version', 'has --version')
     t.match(stdout, 'xsvd -i|--interactive', 'has -i|--interactive')
-    t.match(stdout, 'Set log level (silent|warn|info|verbose|silly)',
+    t.match(stdout, 'Set log level (silent|warn|info|verbose|debug|trace)',
       'has log levels')
     t.match(stdout, '-s|--silent', 'has -s|--silent')
-    t.match(stdout, '--color|--colour <bool>', 'has --color')
     t.match(stdout, 'Bug reports:', 'has Bug reports:')
     // There should be no error messages.
     t.equal(stderr, '', 'stderr empty')
@@ -101,7 +104,9 @@ test('xsvd -h (spawn)', async (t) => {
 
 test('xsvd --help (spawn)', async (t) => {
   try {
-    const { code, stdout, stderr } = await Common.xsvdCli(['--help'])
+    const { code, stdout, stderr } = await Common.xsvdCli([
+      '--help'
+    ])
     t.equal(code, 0, 'exit 0')
     t.match(stdout, 'Usage: xsvd <command>', 'has Usage')
     // There should be no error messages.
@@ -114,12 +119,17 @@ test('xsvd --help (spawn)', async (t) => {
 
 test('xsvd -d (spawn)', async (t) => {
   try {
-    const { code, stdout, stderr } = await Common.xsvdCli(['--version', '-d'])
+    const { code, stdout, stderr } = await Common.xsvdCli([
+      '--version',
+      '-d'
+    ])
     t.equal(code, 0, 'exit 0')
     t.ok(stdout.length > 0, 'has stdout')
     // Matching the whole string also checks that
     // the colour changes are not used.
-    t.match(stderr, 'info it worked if it ends with ok', 'has info')
+    t.match(stdout, 'DEBUG: start arg0:', 'has debug')
+    // There should be no error messages.
+    t.equal(stderr, '', 'stderr empty')
   } catch (err) {
     t.fail(err.message)
   }

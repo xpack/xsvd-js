@@ -32,6 +32,10 @@
 // ----------------------------------------------------------------------------
 
 const assert = require('assert')
+const fs = require('fs')
+const zlib = require('zlib')
+const tar = require('tar')
+
 const spawn = require('child_process').spawn
 const Console = require('console').Console
 const Writable = require('stream').Writable
@@ -50,7 +54,7 @@ const Xsvd = require('../lib/main.js').Xsvd
 const nodeBin = process.env.npm_node_execpath || process.env.NODE ||
   process.execPath
 const executableName = './bin/xsvd.js'
-const pgmName = 'xsvd'
+const programName = 'xsvd'
 
 /**
  * @class Main
@@ -58,14 +62,17 @@ const pgmName = 'xsvd'
 // export
 class Common {
   /**
-   * Run xsvd in a separate process.
+   * @summary Run xsvd in a separate process.
    *
+   * @async
    * @param {string[]} args Command line arguments
    * @param {Object} spawnOpts Optional spawn options.
    * @returns {{code: number, stdout: string, stderr: string}} Exit
    *  code and captured output/error streams.
    *
-   * Spawn a separate process to run node with the
+   * @description
+   * Spawn a separate process to run node with the given arguments and
+   * return the exit code and the stdio streams captured in strings.
    */
   static async xsvdCli (args, spawnOpts = {}) {
     return new Promise((resolve, reject) => {
@@ -78,17 +85,17 @@ class Common {
       const cmd = [executableName]
       const child = spawn(nodeBin, cmd.concat(args), spawnOpts)
 
-      if (child.stderr) {
-        child.stderr.on('data', (chunk) => {
-          stderr += chunk
-        })
-      }
+      assert(child.stderr)
+      child.stderr.on('data', (chunk) => {
+        // console.log(chunk.toString())
+        stderr += chunk
+      })
 
-      if (child.stdout) {
-        child.stdout.on('data', (chunk) => {
-          stdout += chunk
-        })
-      }
+      assert(child.stdout)
+      child.stdout.on('data', (chunk) => {
+        // console.log(chunk.toString())
+        stdout += chunk
+      })
 
       child.on('error', (err) => {
         reject(err)
@@ -101,13 +108,17 @@ class Common {
   }
 
   /**
-   * Run xsvd as a library call.
+   * @summary Run xsvd as a library call.
    *
+   * @async
    * @param {string[]} args Command line arguments
    * @param {Object} ctx Optional context.
    * @returns {{code: number, stdout: string, stderr: string}} Exit
    *  code and captured output/error streams.
    *
+   * @description
+   * Call the application directly, as a regular module, and return
+   * the exit code and the stdio streams captured in strings.
    */
   static async xsvdLib (args, ctx = null) {
     assert(Xsvd !== null, 'No application class')
@@ -129,10 +140,30 @@ class Common {
     })
 
     const _console = new Console(ostream, errstream)
-    const context = Xsvd.initialiseContext(ctx, pgmName, _console)
+    const context = await Xsvd.initialiseContext(ctx, programName, _console)
     const app = new Xsvd(context)
     const code = await app.main(args)
     return { code, stdout, stderr }
+  }
+
+  /**
+   * @summary Extract files from a .tgz archive into a folder.
+   *
+   * @async
+   * @param {string} tgzPath Path to archive file.
+   * @param {string} destPath Path to destination folder.
+   * @returns {undefined} Nothing.
+   */
+  static async extractTgz (tgzPath, destPath) {
+    return new Promise((resolve, reject) => {
+      fs.createReadStream(tgzPath)
+        .on('error', (er) => { reject(er) })
+        .pipe(zlib.createGunzip())
+        .on('error', (er) => { reject(er) })
+        .pipe(tar.Extract({ path: destPath }))
+        .on('error', (er) => { reject(er) })
+        .on('end', () => { resolve() })
+    })
   }
 }
 

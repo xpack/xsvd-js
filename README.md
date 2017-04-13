@@ -59,6 +59,8 @@ $ npm test
 
 The tests use the [`node-tap`](http://www.node-tap.org) framework ('A Test-Anything-Protocol library for Node.js', written by Isaac Schlueter).
 
+The continuous integration tests are performed with [Travis CI](https://travis-ci.org/xpack/xsvd-js).
+
 ### Standard compliance
 
 The module uses ECMAScript 6 class definitions.

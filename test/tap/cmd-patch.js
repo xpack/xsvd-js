@@ -49,7 +49,9 @@ const Common = require('../common.js').Common
  */
 test('xsvd patch', async (t) => {
   try {
-    const { code, stdout, stderr } = await Common.xsvdCli(['patch'])
+    const { code, stdout, stderr } = await Common.xsvdCli([
+      'patch'
+    ])
     // Check exit code.
     t.equal(code, 1, 'exit 1')
     const errLines = stderr.split(/\r?\n/)
@@ -75,7 +77,10 @@ test('xsvd patch', async (t) => {
  */
 test('xsvd patch -h', async (t) => {
   try {
-    const { code, stdout, stderr } = await Common.xsvdCli(['patch', '-h'])
+    const { code, stdout, stderr } = await Common.xsvdCli([
+      'patch',
+      '-h'
+    ])
     // Check exit code.
     t.equal(code, 0, 'exit 0')
     const outLines = stdout.split(/\r?\n/)
@@ -110,7 +115,10 @@ test('xsvd patch -h', async (t) => {
  */
 test('xsvd p -h', async (t) => {
   try {
-    const { code, stdout, stderr } = await Common.xsvdCli(['p', '-h'])
+    const { code, stdout, stderr } = await Common.xsvdCli([
+      'p',
+      '-h'
+    ])
     // Check exit code.
     t.equal(code, 0, 'exit 0')
     const outLines = stdout.split(/\r?\n/)

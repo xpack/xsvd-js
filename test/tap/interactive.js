@@ -53,7 +53,6 @@ const debug = false
 const nodeBin = process.env.npm_node_execpath || process.env.NODE ||
   process.execPath
 const executableName = './bin/xsvd.js'
-// const pgmName = 'xsvd'
 
 let pack = null
 const rootPath = path.dirname(path.dirname(__dirname))
@@ -73,7 +72,6 @@ test('xsvd -i (spawn)', (t) => {
   opts.env = process.env
   const child = spawn(nodeBin, cmd, opts)
 
-  // t.plan(0)
   child.on('error', (err) => {
     if (debug) {
       console.log('error')
@@ -91,6 +89,8 @@ test('xsvd -i (spawn)', (t) => {
     t.end()
   })
 
+  // For unknown reasons, REPL stderr is not forwarded here,
+  // but to stdout.
   let stderr = ''
   if (child.stderr) {
     child.stderr.on('data', (chunk) => {
@@ -111,7 +111,7 @@ test('xsvd -i (spawn)', (t) => {
       if (stdout.endsWith('xsvd> ')) {
         stdout = stdout.replace('xsvd> ', '')
         if (debug) {
-          console.log(stdout)
+          // console.log(stdout)
         }
         // A small state machine to check the conditions after each
         // new prompt identified.
@@ -134,7 +134,7 @@ test('xsvd -i (spawn)', (t) => {
           t.test('-h', (t) => {
             t.match(stdout, 'Usage: xsvd <command> [<subcommand>...]',
               'has Usage')
-            t.equal(stderr, '', 'stderr empty')
+            // t.equal(stderr, '', 'stderr empty')
             t.end()
           })
 
@@ -150,7 +150,7 @@ test('xsvd -i (spawn)', (t) => {
           t.test('code -h', (t) => {
             t.match(stdout, 'Usage: xsvd code [options...] --file <file> ' +
               '--dest <folder>', 'has code Usage')
-            t.equal(stderr, '', 'stderr empty')
+            // t.equal(stderr, '', 'stderr empty')
             t.end()
           })
 
@@ -159,7 +159,7 @@ test('xsvd -i (spawn)', (t) => {
           t.test('code', (t) => {
             t.match(stdout, 'Usage: xsvd code [options...] --file <file> ' +
               '--dest <folder>', 'has code Usage')
-            t.match(stderr, 'Mandatory \'--file\' not found.',
+            t.match(stdout, 'Mandatory \'--file\' not found.',
               '--file not found')
             t.end()
           })
@@ -167,7 +167,7 @@ test('xsvd -i (spawn)', (t) => {
           ostr = 'xyz'
         } else if (count === 6) {
           t.test('xyz', (t) => {
-            t.match(stderr, `Command 'xyz' not supported.`,
+            t.match(stdout, `Command 'xyz' not supported.`,
               'xyz is not supported')
             t.match(stdout, 'Usage: xsvd <command> [<subcommand>...]',
               'has Usage')

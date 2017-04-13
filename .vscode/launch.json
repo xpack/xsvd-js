@@ -115,6 +115,31 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "xsvd convert --file xxx --output yyy",
+      "program": "${workspaceRoot}/bin/xsvd.js",
+      "stopOnEntry": true,
+      "args": [
+        "convert", 
+        "--file", 
+        "/Users/ilg/My Files/MacBookPro Projects/xPack/npm-modules/xsvd-js.git/test/fixtures/STM32F0x0.svd", 
+        "--output", 
+        "/tmp/yyy.json"
+      ],
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": null,
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "internalConsole",
+      "sourceMaps": false
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "xsvd patch -h",
       "program": "${workspaceRoot}/bin/xsvd.js",
       "stopOnEntry": true,

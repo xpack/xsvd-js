@@ -67,7 +67,9 @@ test('setup', async (t) => {
 
 test('xsvd --version (module call)', async (t) => {
   try {
-    const { code, stdout, stderr } = await Common.xsvdLib(['--version', '-ddd'])
+    const { code, stdout, stderr } = await Common.xsvdLib([
+      '--version'
+    ])
     // Check exit code.
     t.equal(code, 0, 'exit 0')
     // Check if version matches the package.
@@ -76,7 +78,25 @@ test('xsvd --version (module call)', async (t) => {
     // There should be no error messages.
     t.equal(stderr, '', 'stderr empty')
   } catch (err) {
-    t.fail(err.stack)
+    console.log(err.stack)
+    t.fail(err.message)
+  }
+  t.end()
+})
+
+test('xsvd xyz (module call)', async (t) => {
+  try {
+    const { code, stdout, stderr } = await Common.xsvdLib([
+      'xyz'
+    ])
+    // Check exit code.
+    t.equal(code, 1, 'exit 1')
+    t.match(stdout, 'Usage: xsvd <command>', 'has Usage')
+    // There should be one error message.
+    t.match(stderr, 'Command \'xyz\' not supported.', 'error')
+  } catch (err) {
+    console.log(err.stack)
+    t.fail(err.message)
   }
   t.end()
 })
