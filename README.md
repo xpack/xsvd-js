@@ -15,7 +15,7 @@ If this is the first time you hear about Node.js, download and install the the b
 
 ## Easy install
 
-The module is available as [**xsvd**](https://www.npmjs.com/package/xsvd) from the public repository, use `npm` to install it:
+The module is available as [**xsvd**](https://www.npmjs.com/package/xsvd) from the public repository; use `npm` to install it:
 
 ```bash
 $ npm install xsvd --global
@@ -54,10 +54,11 @@ As for any `npm` package, the standard way to run the project tests is via `npm 
 
 ```bash
 $ cd xsvd-js.git
+$ npm install
 $ npm test
 ```
 
-The tests use the [`node-tap`](http://www.node-tap.org) framework ('A Test-Anything-Protocol library for Node.js', written by Isaac Schlueter).
+The tests use the [`node-tap`](http://www.node-tap.org) framework (_A Test-Anything-Protocol library for Node.js_, written by Isaac Schlueter).
 
 The continuous integration tests are performed with [Travis CI](https://travis-ci.org/xpack/xsvd-js).
 
@@ -75,7 +76,7 @@ Known and accepted exceptions:
 
 The documentation metadata follows the [JSdoc](http://usejsdoc.org) tags.
 
-To enforce checking at file level, add the following comment to each file:
+To enforce checking at file level, add the following comments right after the `use strict`:
 
 ```
 'use strict'
