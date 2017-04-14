@@ -148,11 +148,11 @@
       "args": [
         "convert", 
         "-C",
-        "/tmp",
+        "/Users/ilg/tmp",
         "--file", 
-        "STM32F0x0.svd", 
+        "STM32F0x1.svd", 
         "--output", 
-        "STM32F0x0.json"
+        "STM32F0x1.json"
       ],
       "cwd": "${workspaceRoot}",
       "preLaunchTask": null,
@@ -175,6 +175,35 @@
       "args": [
         "patch",
         "-h"
+      ],
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": null,
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "internalConsole",
+      "sourceMaps": false
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "xsvd patch --file json --patch json --output json",
+      "program": "${workspaceRoot}/bin/xsvd.js",
+      "stopOnEntry": true,
+      "args": [
+        "patch",
+        "-C",
+        "/Users/ilg/tmp",
+        "--file",
+        "STM32F0x1.json",
+        "--patch",
+        "STM32F0x1-patch.json",
+        "--output",
+        "STM32F0x1-out.json"
       ],
       "cwd": "${workspaceRoot}",
       "preLaunchTask": null,
