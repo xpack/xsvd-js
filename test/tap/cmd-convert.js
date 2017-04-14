@@ -47,6 +47,9 @@ const test = require('tap').test
 const Common = require('../common.js').Common
 const Promisifier = require('../../lib/utils/asy.js')
 
+// ES6: `import { CliExitCodes } from 'cli-start-options'
+const CliExitCodes = require('@ilg/cli-start-options').CliExitCodes
+
 // ----------------------------------------------------------------------------
 
 const fixtures = path.resolve(__dirname, '../fixtures')
@@ -69,7 +72,7 @@ test('xsvd convert', async (t) => {
       'convert'
     ])
     // Check exit code.
-    t.equal(code, 1, 'exit 1')
+    t.equal(code, CliExitCodes.ERROR.SYNTAX, 'exit code')
     const errLines = stderr.split(/\r?\n/)
     // console.log(errLines)
     t.ok(errLines.length === 3, 'has two errors')
@@ -94,7 +97,7 @@ test('xsvd convert -h', async (t) => {
       '-h'
     ])
     // Check exit code.
-    t.equal(code, 0, 'exit 0')
+    t.equal(code, 0, 'exit code')
     const outLines = stdout.split(/\r?\n/)
     t.ok(outLines.length > 9, 'has enough output')
     if (outLines.length > 9) {
@@ -125,7 +128,7 @@ test('xsvd con -h', async (t) => {
       '-h'
     ])
     // Check exit code.
-    t.equal(code, 0, 'exit 0')
+    t.equal(code, 0, 'exit code')
     const outLines = stdout.split(/\r?\n/)
     t.ok(outLines.length > 9, 'has enough output')
     if (outLines.length > 9) {
@@ -156,7 +159,7 @@ test('xsvd con --file xxx --output yyy', async (t) => {
       'yyy'
     ])
     // Check exit code.
-    t.equal(code, 3, 'exit 3')
+    t.equal(code, CliExitCodes.ERROR.INPUT, 'exit code')
     // There should be no output.
     t.equal(stdout, '', 'stdout empty')
     t.match(stderr, 'ENOENT: no such file or directory', 'ENOENT')
@@ -168,9 +171,14 @@ test('xsvd con --file xxx --output yyy', async (t) => {
 
 test('unpack', async (t) => {
   const tgzPath = path.resolve(fixtures, 'STM32F0x0.svd.tgz')
-  t.doesNotThrow(async () => {
+  try {
     await Common.extractTgz(tgzPath, workFolder)
-  }, 'STM32F0x0.svd.tgz unpacked into ' + workFolder)
+    t.pass('STM32F0x0.svd.tgz unpacked into ' + workFolder)
+    await fs.chmodPromise(filePath, 0o444)
+    t.pass('chmod')
+  } catch (err) {
+    t.fail(err)
+  }
   t.end()
 })
 
@@ -187,7 +195,7 @@ test('xsvd con --file STM32F0x0.svd --output STM32F0x0.json', async (t) => {
       outPath
     ])
     // Check exit code.
-    t.equal(code, 0, 'exit 0')
+    t.equal(code, 0, 'exit code')
     t.equal(stdout, '', 'no output')
     // console.log(stdout)
     t.equal(stderr, '', 'no errors')
@@ -217,7 +225,7 @@ test('xsvd con --file STM32F0x0.svd --output STM32F0x0.json -v', async (t) => {
       '-v'
     ])
     // Check exit code.
-    t.equal(code, 0, 'exit 0')
+    t.equal(code, 0, 'exit code')
     t.match(stdout, 'Done.', 'done message')
     // console.log(stdout)
     t.equal(stderr, '', 'no errors')

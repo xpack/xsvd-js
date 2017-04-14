@@ -120,10 +120,39 @@
       "stopOnEntry": true,
       "args": [
         "convert", 
+        "-C",
+        "/tmp",
         "--file", 
-        "/Users/ilg/My Files/MacBookPro Projects/xPack/npm-modules/xsvd-js.git/test/fixtures/STM32F0x0.svd", 
+        "xxx", 
         "--output", 
-        "/tmp/yyy.json"
+        "yyy"
+      ],
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": null,
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "internalConsole",
+      "sourceMaps": false
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "xsvd convert --file svd --output json",
+      "program": "${workspaceRoot}/bin/xsvd.js",
+      "stopOnEntry": true,
+      "args": [
+        "convert", 
+        "-C",
+        "/tmp",
+        "--file", 
+        "STM32F0x0.svd", 
+        "--output", 
+        "STM32F0x0.json"
       ],
       "cwd": "${workspaceRoot}",
       "preLaunchTask": null,
