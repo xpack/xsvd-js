@@ -29,7 +29,7 @@ The development repository is available from the GitHub [xpack/xsvd-js](https://
 
 To get an initial glimpse on the program, ask for help:
 
-```bash
+```
 $ xsvd --help
 
 The xPack SVD manager
@@ -63,7 +63,7 @@ As shown, the `xsvd` application has multiple functionality, via several subcomm
 
 ### Convert an ARM SVD file from XML to JSON
 
-```bash
+```
 $ xsvd convert --help
 
 Convert an ARM SVD file from XML to JSON
@@ -78,7 +78,7 @@ Convert options:
 
 Example
 
-```bash
+```
 $ xsvd convert -C ${HOME}/tmp --file STM32F0x1.svd --output STM32F0x1.json --verbose
 Convert an ARM SVD file from XML to JSON
 Reading '/tmp/STM32F0x1.svd'...
@@ -91,7 +91,7 @@ Done.
 
 ### Modify SVD JSON file using a JSON patch
 
-```bash
+```
 $ xsvd patch -h
 
 Modify SVD JSON file using a JSON patch
@@ -110,7 +110,7 @@ Patch options:
 
 Example
 
-```bash
+```
 $ xsvd patch -C ${HOME}/tmp --file STM32F0x1.json --patch STM32F0x1-patch.json --output STM32F0x1-out.json --remove NVIC --verbose
 Modify SVD JSON file using a JSON patch
 Reading '/Users/ilg/tmp/STM32F0x1.json'...
