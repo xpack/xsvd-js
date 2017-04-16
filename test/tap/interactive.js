@@ -149,7 +149,7 @@ test('xsvd -i (spawn)', (t) => {
         } else if (count === 4) {
           t.test('code -h', (t) => {
             t.match(stdout, 'Usage: xsvd code [options...] --file <file> ' +
-              '--dest <folder>', 'has code Usage')
+              '[--dest <folder>]', 'has code Usage')
             // t.equal(stderr, '', 'stderr empty')
             t.end()
           })
@@ -158,7 +158,7 @@ test('xsvd -i (spawn)', (t) => {
         } else if (count === 5) {
           t.test('code', (t) => {
             t.match(stdout, 'Usage: xsvd code [options...] --file <file> ' +
-              '--dest <folder>', 'has code Usage')
+              '[--dest <folder>]', 'has code Usage')
             t.match(stdout, 'Mandatory \'--file\' not found.',
               '--file not found')
             t.end()

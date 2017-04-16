@@ -1,0 +1,135 @@
+{% assign periphName = peripheral.name %}
+{% if peripheral.qemuGroupName %}
+{% assign periphName = peripheral.qemuGroupName %}
+{% endif %}
+/*
+ * {{ vendorPrefix }} - {{ periphName }} ({{ peripheral.description }}) emulation.
+ *
+ * Copyright (c) 2016 Liviu Ionescu.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef {{ vendorPrefix }}_{{ periphName }}_H_
+#define {{ vendorPrefix }}_{{ periphName }}_H_
+
+#include "qemu/osdep.h"
+
+#include <hw/cortexm/peripheral.h>
+#include <hw/cortexm/{{ vendorPrefix | downcase }}/capabilities.h>
+
+// ----------------------------------------------------------------------------
+
+#define DEVICE_PATH_{{ vendorPrefix }}_{{ periphName }} DEVICE_PATH_{{ vendorPrefix }} "{{ periphName }}"
+
+{% if peripheral.qemuGroupName %}
+// ----------------------------------------------------------------------------
+
+// Note: the "port-index" property has type "int".
+typedef enum {
+    // TODO: keep this list in ascending order.
+{% for port in peripherals %}
+{% if port.qemuGroupName == peripheral.qemuGroupName %}
+    {{ vendorPrefix }}_PORT_{{ port.name }},
+{% endif %}
+{% endfor %}
+    {{ vendorPrefix }}_PORT_{{ periphName }}_UNDEFINED = 0xFF,
+} {{ vendorPrefix | downcase }}_{{ periphName | downcase }}_index_t;
+{% endif %}
+
+// ----------------------------------------------------------------------------
+
+#define TYPE_{{ vendorPrefix }}_{{ periphName }} TYPE_{{ vendorPrefix }}_PREFIX "{{ periphName | downcase }}" TYPE_PERIPHERAL_SUFFIX
+
+// ----------------------------------------------------------------------------
+
+// Parent definitions.
+#define TYPE_{{ vendorPrefix }}_{{ periphName }}_PARENT TYPE_PERIPHERAL
+typedef PeripheralClass {{ vendorPrefix }}{{ periphName }}ParentClass;
+typedef PeripheralState {{ vendorPrefix }}{{ periphName }}ParentState;
+
+// ----------------------------------------------------------------------------
+
+// Class definitions.
+#define {{ vendorPrefix }}_{{ periphName }}_GET_CLASS(obj) \
+    OBJECT_GET_CLASS({{ vendorPrefix }}{{ periphName }}Class, (obj), TYPE_{{ vendorPrefix }}_{{ periphName }})
+#define {{ vendorPrefix }}_{{ periphName }}_CLASS(klass) \
+    OBJECT_CLASS_CHECK({{ vendorPrefix }}{{ periphName }}Class, (klass), TYPE_{{ vendorPrefix }}_{{ periphName }})
+
+typedef struct {
+    // private: 
+    {{ vendorPrefix }}{{ periphName }}ParentClass parent_class;
+    // public: 
+
+    // None, so far.
+} {{ vendorPrefix }}{{ periphName }}Class;
+
+// ----------------------------------------------------------------------------
+
+// Instance definitions.
+#define {{ vendorPrefix }}_{{ periphName }}_STATE(obj) \
+    OBJECT_CHECK({{ vendorPrefix }}{{ periphName }}State, (obj), TYPE_{{ vendorPrefix }}_{{ periphName }})
+
+typedef struct {
+    // private:
+    {{ vendorPrefix }}{{ periphName }}ParentState parent_obj;
+    // public:
+
+    const {{ vendorPrefix }}Capabilities *capabilities;
+
+    // TODO: remove this if the peripheral is always enabled.
+    // Points to the bitfield that enables the peripheral.
+    Object *enabling_bit;
+
+{% if peripheral.qemuGroupName %}
+    // Remove it if there is only one port
+    {{ vendorPrefix | downcase }}_{{ periphName | downcase }}_index_t port_index;
+
+{% endif %}
+    union {
+      // ----- 8< ----- 8< -----  8< ----- 8< ----- 8< ----- 8< ----- 8< -----
+
+      // DO NOT REMOVE FIELDS! Automatically generated!
+      // Merge fields from different family members.
+      struct {
+        // {{ deviceFamily }} {{ periphName }} ({{ peripheral.description }}) registers.
+        struct { 
+{% for register in peripheral.registers %}
+          Object *{{ register.name | downcase | c_reserved }}; // {{ register.addressOffset}} ({{ register.description }}) 
+{% endfor %}
+        } reg;
+
+        struct { 
+{% for register in peripheral.registers %}
+
+          // {{ register.name }} ({{ register.description }}) bitfields.
+          struct { 
+{% if register.fields %}
+{% for field in register.fields %}
+            Object *{{ field.name | downcase | c_reserved }}; // [{{ field.bitOffset }}:{{ field.bitOffset | plus: field.bitWidth | minus: 1 }}] {{ field.description }}
+{% endfor %} 
+{% endif %}
+          } {{ register.name | downcase | c_reserved }}; 
+{% endfor %}
+        } fld;
+      } {{ deviceFamily | downcase }};
+
+      // ----- 8< ----- 8< -----  8< ----- 8< ----- 8< ----- 8< ----- 8< -----
+    } u;
+
+} {{ vendorPrefix }}{{ periphName }}State;
+
+// ----------------------------------------------------------------------------
+
+#endif /* {{ vendorPrefix }}_{{ periphName }}_H_ */

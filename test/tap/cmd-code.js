@@ -85,10 +85,10 @@ test('xsvd code -h', async (t) => {
       t.equal(outLines[1], 'Generate QEMU peripheral source files for ' +
         'a given family', 'has title')
       t.equal(outLines[2], 'Usage: xsvd code [options...] ' +
-        '--file <file> --dest <folder>', 'has Usage')
-      t.equal(outLines[3], '                 --vendor-prefix <string> ' +
-        '--device-family <string>', 'has usage 2nd line')
-      t.equal(outLines[4], '                 --device-selector <string>',
+        '--file <file> [--dest <folder>]', 'has Usage')
+      t.equal(outLines[3], '                 [--vendor-prefix <string>] ' +
+        '[--device-family <string>]', 'has usage 2nd line')
+      t.equal(outLines[4], '                 [--device-selector <string>]',
         'has usage 3rd line')
       t.match(outLines[6], 'Code options:', 'has code options')
       t.match(outLines[7], '  --file <file>  ', 'has --file')
@@ -125,7 +125,7 @@ test('xsvd cod -h', async (t) => {
       t.equal(outLines[1], 'Generate QEMU peripheral source files for ' +
         'a given family', 'has title')
       t.equal(outLines[2], 'Usage: xsvd code [options...] ' +
-        '--file <file> --dest <folder>', 'has Usage')
+        '--file <file> [--dest <folder>]', 'has Usage')
     }
     // There should be no error messages.
     t.equal(stderr, '', 'stderr empty')

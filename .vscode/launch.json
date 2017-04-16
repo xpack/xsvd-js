@@ -283,6 +283,55 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "xsvd code -C tmp",
+      "program": "${workspaceRoot}/bin/xsvd.js",
+      "stopOnEntry": true,
+      "args": [
+        "code",
+        "-C",
+        "/Users/ilg/tmp"
+      ],
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": null,
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "internalConsole",
+      "sourceMaps": false
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "xsvd code -C tmp --file",
+      "program": "${workspaceRoot}/bin/xsvd.js",
+      "stopOnEntry": true,
+      "args": [
+        "code",
+        "-C",
+        "/Users/ilg/tmp",
+        "--file",
+        "STM32F0x1-out.json",
+        "-dd"
+      ],
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": null,
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "internalConsole",
+      "sourceMaps": false
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "xsvd (-i)",
       "program": "${workspaceRoot}/bin/xsvd.js",
       "stopOnEntry": true,
