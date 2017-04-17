@@ -80,9 +80,9 @@ test('xsvd convert',
       t.ok(errLines.length === 3, 'has two errors')
       if (errLines.length === 3) {
         t.match(errLines[0], 'Mandatory \'--file\' not found.',
-        'has --file error')
+          'has --file error')
         t.match(errLines[1], 'Mandatory \'--output\' not found.',
-        'has --output error')
+          'has --output error')
       }
       t.match(stdout, 'Usage: xsvd convert [options...]', 'has Usage')
     } catch (err) {
@@ -108,9 +108,9 @@ test('xsvd convert -h',
       if (outLines.length > 9) {
         // console.log(outLines)
         t.equal(outLines[1], 'Convert an ARM SVD file from XML to JSON',
-        'has title')
+          'has title')
         t.equal(outLines[2], 'Usage: xsvd convert [options...] ' +
-        '--file <file> --output <file>', 'has Usage')
+          '--file <file> --output <file>', 'has Usage')
         t.match(outLines[4], 'Convert options:', 'has convert options')
         t.match(outLines[5], '  --file <file>  ', 'has --file')
         t.match(outLines[6], '  --output <file>  ', 'has --output')
@@ -140,9 +140,9 @@ test('xsvd con -h',
       if (outLines.length > 9) {
         // console.log(outLines)
         t.equal(outLines[1], 'Convert an ARM SVD file from XML to JSON',
-        'has title')
+          'has title')
         t.equal(outLines[2], 'Usage: xsvd convert [options...] ' +
-        '--file <file> --output <file>', 'has Usage')
+          '--file <file> --output <file>', 'has Usage')
       }
       // There should be no error messages.
       t.equal(stderr, '', 'stderr empty')
@@ -230,13 +230,14 @@ test('xsvd con --file STM32F0x0.svd --output STM32F0x0.json',
 test('xsvd con --file STM32F0x0.svd --output STM32F0x0.json -v',
   async (t) => {
     try {
-      const outPath = path.resolve(workFolder, 'STM32F0x0.json')
       const { code, stdout, stderr } = await Common.xsvdCli([
         'con',
+        '-C',
+        workFolder,
         '--file',
         filePath,
         '--output',
-        outPath,
+        'STM32F0x0.json',
         '-v'
       ])
       // Check exit code.
@@ -251,60 +252,42 @@ test('xsvd con --file STM32F0x0.svd --output STM32F0x0.json -v',
     t.end()
   })
 
-test('xsvd con --file STM32F0x0.svd --output ro/STM32F0x0.json -v',
-  async (t) => {
-    try {
-      const outPath = path.resolve(workFolder, 'ro', 'STM32F0x0.json')
-      const { code, stdout, stderr } = await Common.xsvdCli([
-        'con',
-        '--file',
-        filePath,
-        '--output',
-        outPath,
-        '-v'
-      ])
-      // Check exit code.
-      t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
-      // Output should go up to Writing...
-      // console.log(stdout)
-      t.match(stdout, 'Writing ', 'up to writing')
-      // console.log(stderr)
-      t.match(stderr, 'EACCES: permission denied', 'EACCES')
-    } catch (err) {
-      t.fail(err.message)
-    }
-    t.end()
-  })
-
-test('xsvd con -C ... --file STM32F0x0.svd --output ro/STM32F0x0.json -v',
-  async (t) => {
-    try {
-      const { code, stdout, stderr } = await Common.xsvdCli([
-        'con',
-        '-C',
-        workFolder,
-        '--file',
-        filePath,
-        '--output',
-        'ro/STM32F0x0.json',
-        '-v'
-      ])
-      // Check exit code.
-      t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
-      // Output should go up to Writing...
-      // console.log(stdout)
-      t.match(stdout, 'Writing ', 'up to writing')
-      // console.log(stderr)
-      t.match(stderr, 'EACCES: permission denied', 'EACCES')
-    } catch (err) {
-      t.fail(err.message)
-    }
-    t.end()
-  })
+// Windows R/O folders do not prevent creating new files.
+if (os.platform() !== 'win32') {
+  /**
+   * Test output error.
+   */
+  test('xsvd con --file STM32F0x0.svd --output ro/STM32F0x0.json -v',
+    async (t) => {
+      try {
+        const outPath = path.resolve(workFolder, 'ro', 'STM32F0x0.json')
+        const { code, stdout, stderr } = await Common.xsvdCli([
+          'con',
+          '--file',
+          filePath,
+          '--output',
+          outPath,
+          '-v'
+        ])
+        // Check exit code.
+        t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
+        // Output should go up to Writing...
+        // console.log(stdout)
+        t.match(stdout, 'Writing ', 'up to writing')
+        // console.log(stderr)
+        t.match(stderr, 'EACCES: permission denied', 'EACCES')
+      } catch (err) {
+        t.fail(err.message)
+      }
+      t.end()
+    })
+}
 
 test('cleanup', async (t) => {
   await fs.chmodPromise(filePath, 0o666)
   t.pass('chmod')
+  await fs.chmodPromise(readOnlyFolder, 0o666)
+  t.pass('chmod ro')
   await rimraf(workFolder)
   t.pass('tmpdir removed')
 })

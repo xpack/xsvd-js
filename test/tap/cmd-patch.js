@@ -80,11 +80,11 @@ test('xsvd patch',
       t.ok(errLines.length === 4, 'has three errors')
       if (errLines.length === 4) {
         t.match(errLines[0], 'Mandatory \'--file\' not found.',
-        'has --file error')
+          'has --file error')
         t.match(errLines[1], 'Mandatory \'--patch\' not found.',
-        'has --patch error')
+          'has --patch error')
         t.match(errLines[2], 'Mandatory \'--output\' not found.',
-        'has --output error')
+          'has --output error')
       }
       t.match(stdout, 'Usage: xsvd patch [options...]', 'has Usage')
     } catch (err) {
@@ -110,19 +110,19 @@ test('xsvd patch -h',
       if (outLines.length > 12) {
         // console.log(outLines)
         t.equal(outLines[1], 'Modify SVD JSON file using a JSON patch',
-        'has title')
+          'has title')
         t.equal(outLines[2], 'Usage: xsvd patch [options...] ' +
-        '--file <file> --patch <file> --output <file>', 'has Usage')
+          '--file <file> --patch <file> --output <file>', 'has Usage')
         t.equal(outLines[3], '                  [--group-bitfield <name>]* ' +
-        '[--remove <name>]*', 'has usage 2nd line')
+          '[--remove <name>]*', 'has usage 2nd line')
         t.match(outLines[5], 'Patch options:', 'has patch options')
         t.match(outLines[6], '  --file <file>  ', 'has --file')
         t.match(outLines[7], '  --patch <file>  ', 'has --patch')
         t.match(outLines[8], '  --output <file>  ', 'has --output')
         t.match(outLines[9], '  --group-bitfield <name>  ',
-        'has --group-bitfield')
+          'has --group-bitfield')
         t.match(outLines[10], '  --remove <name>  ',
-        'has --remove')
+          'has --remove')
       }
       // There should be no error messages.
       t.equal(stderr, '', 'stderr empty')
@@ -149,9 +149,9 @@ test('xsvd p -h',
       if (outLines.length > 12) {
         // console.log(outLines)
         t.equal(outLines[1], 'Modify SVD JSON file using a JSON patch',
-        'has title')
+          'has title')
         t.equal(outLines[2], 'Usage: xsvd patch [options...] ' +
-        '--file <file> --patch <file> --output <file>', 'has Usage')
+          '--file <file> --patch <file> --output <file>', 'has Usage')
       }
       // There should be no error messages.
       t.equal(stderr, '', 'stderr empty')
@@ -267,41 +267,8 @@ test('xsvd p --file STM32F0x0-xsvd.json --patch STM32F0x0-patch.json ' +
     t.end()
   })
 
-/**
- * Test output error.
- */
-test('xsvd p --file STM32F0x0-xsvd.json --patch STM32F0x0-patch.json ' +
-  '--output ro/STM32F0x0-qemu.json',
-  async (t) => {
-    try {
-      const outPath = path.resolve(workFolder, 'ro', 'STM32F0x0-qemu.json')
-      const { code, stdout, stderr } = await Common.xsvdCli([
-        'p',
-        '--file',
-        filePath,
-        '--patch',
-        patchPath,
-        '--output',
-        outPath,
-        '-v'
-      ])
-      // Check exit code.
-      t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
-      // Output should go up to Writing...
-      t.match(stdout, 'Writing ', 'up to writing')
-      // console.log(stderr)
-      t.match(stderr, 'EACCES: permission denied', 'EACCES')
-    } catch (err) {
-      t.fail(err.message)
-    }
-    t.end()
-  })
-
-/**
- * Test output error.
- */
 test('xsvd p -C ... --file STM32F0x0-xsvd.json --patch STM32F0x0-patch.json ' +
-  '--output ro/STM32F0x0-qemu.json',
+  '--output STM32F0x0-qemu.json',
   async (t) => {
     try {
       const { code, stdout, stderr } = await Common.xsvdCli([
@@ -313,20 +280,53 @@ test('xsvd p -C ... --file STM32F0x0-xsvd.json --patch STM32F0x0-patch.json ' +
         '--patch',
         patchPath,
         '--output',
-        'ro/STM32F0x0-qemu.json',
+        'STM32F0x0-qemu.json',
         '-v'
       ])
       // Check exit code.
-      t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
-      // Output should go up to Writing...
-      t.match(stdout, 'Writing ', 'up to writing')
+      t.equal(code, 0, 'exit code')
+      t.match(stdout, 'Done.', 'done message')
+      // console.log(stdout)
+      t.equal(stderr, '', 'no errors')
       // console.log(stderr)
-      t.match(stderr, 'EACCES: permission denied', 'EACCES')
     } catch (err) {
       t.fail(err.message)
     }
     t.end()
   })
+
+// Windows R/O folders do not prevent creating new files.
+if (os.platform() !== 'win32') {
+  /**
+   * Test output error.
+   */
+  test('xsvd p --file STM32F0x0-xsvd.json --patch STM32F0x0-patch.json ' +
+    '--output ro/STM32F0x0-qemu.json',
+    async (t) => {
+      try {
+        const outPath = path.resolve(workFolder, 'ro', 'STM32F0x0-qemu.json')
+        const { code, stdout, stderr } = await Common.xsvdCli([
+          'p',
+          '--file',
+          filePath,
+          '--patch',
+          patchPath,
+          '--output',
+          outPath,
+          '-v'
+        ])
+        // Check exit code.
+        t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
+        // Output should go up to Writing...
+        t.match(stdout, 'Writing ', 'up to writing')
+        // console.log(stderr)
+        t.match(stderr, 'EACCES: permission denied', 'EACCES')
+      } catch (err) {
+        t.fail(err.message)
+      }
+      t.end()
+    })
+}
 
 test('cleanup',
   async (t) => {
@@ -334,6 +334,8 @@ test('cleanup',
     t.pass('chmod xsvd')
     await fs.chmodPromise(patchPath, 0o666)
     t.pass('chmod patch')
+    await fs.chmodPromise(readOnlyFolder, 0o666)
+    t.pass('chmod ro')
     await rimraf(workFolder)
     t.pass('tmpdir removed')
   })

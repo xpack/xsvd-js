@@ -201,11 +201,13 @@ test('xsvd code --file xxx',
 /**
  * Test if output files are generated.
  */
-test('xsvd code --file STM32F0x0-qemu.json',
+test('xsvd code -C ... --file STM32F0x0-qemu.json',
   async (t) => {
     try {
       const { code, stdout, stderr } = await Common.xsvdCli([
         'code',
+        '-C',
+        workFolder,
         '--file',
         filePath,
         '-v'
@@ -222,59 +224,43 @@ test('xsvd code --file STM32F0x0-qemu.json',
     t.end()
   })
 
-test('xsvd code --file STM32F0x0-qemu.json --dest ro',
-  async (t) => {
-    try {
-      const outPath = path.resolve(workFolder, 'ro')
-      const { code, stdout, stderr } = await Common.xsvdCli([
-        'code',
-        '--file',
-        filePath,
-        '--dest',
-        outPath,
-        '-v'
-      ])
-      // Check exit code.
-      t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
-      t.match(stdout, 'Peripherals:', 'peripherals message')
-      // console.log(stdout)
-      t.match(stderr, 'EACCES: permission denied', 'EACCES')
-      // console.log(stderr)
-    } catch (err) {
-      t.fail(err.message)
-    }
-    t.end()
-  })
-
-test('xsvd code -C ... --file STM32F0x0-qemu.json --dest ro',
-  async (t) => {
-    try {
-      const { code, stdout, stderr } = await Common.xsvdCli([
-        'code',
-        '-C',
-        workFolder,
-        '--file',
-        filePath,
-        '--dest',
-        'ro',
-        '-v'
-      ])
-      // Check exit code.
-      t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
-      t.match(stdout, 'Peripherals:', 'peripherals message')
-      // console.log(stdout)
-      t.match(stderr, 'EACCES: permission denied', 'EACCES')
-      // console.log(stderr)
-    } catch (err) {
-      t.fail(err.message)
-    }
-    t.end()
-  })
+// Windows R/O folders do not prevent creating new files.
+if (os.platform() !== 'win32') {
+  /**
+   * Test if writing to a R/O folder fails with ERROR.OUTPUT.
+   */
+  test('xsvd code --file STM32F0x0-qemu.json --dest ro',
+    async (t) => {
+      try {
+        const outPath = path.resolve(workFolder, 'ro')
+        const { code, stdout, stderr } = await Common.xsvdCli([
+          'code',
+          '--file',
+          filePath,
+          '--dest',
+          outPath,
+          '-v'
+        ])
+        // Check exit code.
+        console.log(code)
+        t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
+        t.match(stdout, 'Peripherals:', 'peripherals message')
+        // console.log(stdout)
+        t.match(stderr, 'EACCES: permission denied', 'EACCES')
+        // console.log(stderr)
+      } catch (err) {
+        t.fail(err.message)
+      }
+      t.end()
+    })
+}
 
 test('cleanup',
   async (t) => {
     await fs.chmodPromise(filePath, 0o666)
     t.pass('chmod xsvd')
+    await fs.chmodPromise(readOnlyFolder, 0o666)
+    t.pass('chmod ro')
     await rimraf(workFolder)
     t.pass('tmpdir removed')
   })
