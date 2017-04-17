@@ -92,7 +92,7 @@ Done.
 ### Modify SVD JSON file using a JSON patch
 
 ```
-$ xsvd patch -h
+$ xsvd patch --help
 
 Modify SVD JSON file using a JSON patch
 Usage: xsvd patch [options...] --file <file> --patch <file> --output <file>
@@ -128,7 +128,7 @@ To generate the QEMU source files, use the patched xSVD file; the header and sou
 For STM32 devices, the vendor/family/device definitions can be derived from the SVD device name, and are optional.
 
 ```
-$ xsvd code -h
+$ xsvd code --help
 
 Generate QEMU peripheral source files for a given family
 Usage: xsvd code [options...] --file <file> [--dest <folder>]
@@ -377,7 +377,7 @@ All files              |    58.01 |     39.2 |     66.3 |    58.01 |            
 
 ### Continuous Integration (CI)
 
-The continuous integration tests are performed with [Travis CI](https://travis-ci.org/xpack/xsvd-js).
+The continuous integration tests are performed via [Travis CI](https://travis-ci.org/xpack/xsvd-js).
 
 ### Standard compliance
 
@@ -389,7 +389,7 @@ Known and accepted exceptions:
 
 - none.
 
-To manually fix the compliance with the style guide (where possible):
+To manually fix compliance with the style guide (where possible):
 
 ```
 $ npm run fix
@@ -410,6 +410,8 @@ To enforce checking at file level, add the following comments right after the `u
 /* eslint valid-jsdoc: "error" */
 /* eslint max-len: [ "error", 80, { "ignoreUrls": true } ] */
 ```
+
+Note: be sure C style comments are used, C++ styles are not parsed by [ESLint](http://eslint.org).
 
 ## License
 
