@@ -121,6 +121,96 @@ Writing '/Users/ilg/tmp/STM32F0x1-out.json'...
 Done.
 ```
 
+### Generate QEMU peripheral source files for a given family
+
+```
+$ xsvd code -h
+
+Generate QEMU peripheral source files for a given family
+Usage: xsvd code [options...] --file <file> [--dest <folder>]
+                 [--vendor-prefix <string>] [--device-family <string>]
+                 [--device-selector <string>]
+
+Code options:
+  --file <file>               Input file in JSON format 
+  --dest <folder>             Destination folder (optional, default SVD device name)
+  --vendor-prefix <string>    Prefix, like STM32 (optional)
+  --device-family <string>    Family, like F4 (optional)
+  --device-selector <string>  Selector, like 40x (optional)
+
+...
+```
+
+Example
+```
+$ ./bin/xsvd.js code -C ${HOME}/tmp --file STM32F0x1-out.json --verbose
+Generate QEMU peripheral source files for a given family
+Reading '/Users/ilg/tmp/STM32F0x1-out.json'...
+Peripherals: ADC CAN CEC COMP CRC CRS DAC DBGMCU DMA(DMA1) EXTI Flash GPIO(GPIOA) GPIO(GPIOF) I2C(I2C1) IWDG PWR RCC RTC SPI(SPI1) SYSCFG TIM1 TIM14 TIM15 TIM16 TIM2 TIM6 TSC USART(USART1) USB WWDG
+
+Header file 'STM32F0x1/adc.h' written.
+Source file 'STM32F0x1/adc.c' written.
+Header file 'STM32F0x1/can.h' written.
+Source file 'STM32F0x1/can.c' written.
+Header file 'STM32F0x1/cec.h' written.
+Source file 'STM32F0x1/cec.c' written.
+Header file 'STM32F0x1/comp.h' written.
+Source file 'STM32F0x1/comp.c' written.
+Header file 'STM32F0x1/crc.h' written.
+Source file 'STM32F0x1/crc.c' written.
+Header file 'STM32F0x1/crs.h' written.
+Source file 'STM32F0x1/crs.c' written.
+Header file 'STM32F0x1/dac.h' written.
+Source file 'STM32F0x1/dac.c' written.
+Header file 'STM32F0x1/dbgmcu.h' written.
+Source file 'STM32F0x1/dbgmcu.c' written.
+Header file 'STM32F0x1/dma1.h' written.
+Source file 'STM32F0x1/dma1.c' written.
+Header file 'STM32F0x1/exti.h' written.
+Source file 'STM32F0x1/exti.c' written.
+Header file 'STM32F0x1/flash.h' written.
+Source file 'STM32F0x1/flash.c' written.
+Header file 'STM32F0x1/gpioa.h' written.
+Source file 'STM32F0x1/gpioa.c' written.
+Header file 'STM32F0x1/gpiof.h' written.
+Source file 'STM32F0x1/gpiof.c' written.
+Header file 'STM32F0x1/i2c1.h' written.
+Source file 'STM32F0x1/i2c1.c' written.
+Header file 'STM32F0x1/iwdg.h' written.
+Source file 'STM32F0x1/iwdg.c' written.
+Header file 'STM32F0x1/pwr.h' written.
+Source file 'STM32F0x1/pwr.c' written.
+Header file 'STM32F0x1/rcc.h' written.
+Source file 'STM32F0x1/rcc.c' written.
+Header file 'STM32F0x1/rtc.h' written.
+Source file 'STM32F0x1/rtc.c' written.
+Header file 'STM32F0x1/spi1.h' written.
+Source file 'STM32F0x1/spi1.c' written.
+Header file 'STM32F0x1/syscfg.h' written.
+Source file 'STM32F0x1/syscfg.c' written.
+Header file 'STM32F0x1/tim1.h' written.
+Source file 'STM32F0x1/tim1.c' written.
+Header file 'STM32F0x1/tim14.h' written.
+Source file 'STM32F0x1/tim14.c' written.
+Header file 'STM32F0x1/tim15.h' written.
+Source file 'STM32F0x1/tim15.c' written.
+Header file 'STM32F0x1/tim16.h' written.
+Source file 'STM32F0x1/tim16.c' written.
+Header file 'STM32F0x1/tim2.h' written.
+Source file 'STM32F0x1/tim2.c' written.
+Header file 'STM32F0x1/tim6.h' written.
+Source file 'STM32F0x1/tim6.c' written.
+Header file 'STM32F0x1/tsc.h' written.
+Source file 'STM32F0x1/tsc.c' written.
+Header file 'STM32F0x1/usart1.h' written.
+Source file 'STM32F0x1/usart1.c' written.
+Header file 'STM32F0x1/usb.h' written.
+Source file 'STM32F0x1/usb.c' written.
+Header file 'STM32F0x1/wwdg.h' written.
+Source file 'STM32F0x1/wwdg.c' written.
+Done.
+```
+
 ## Developer info
 
 ### Git repo
