@@ -382,7 +382,7 @@ All files              |    58.01 |     39.2 |     66.3 |    58.01 |            
 
 ### Continuous Integration (CI)
 
-The continuous integration tests are performed via [Travis CI](https://travis-ci.org/xpack/xsvd-js).
+The continuous integration tests are performed via [Travis CI](https://travis-ci.org/xpack/xsvd-js) and [AppVeyor](https://ci.appveyor.com/project/ilg-ul/xsvd-js).
 
 ### Standard compliance
 
