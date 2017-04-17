@@ -1,6 +1,6 @@
 {
   "name": "xsvd",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "The xPack SVD manager",
   "main": "./index.js.js",
   "directories": {
