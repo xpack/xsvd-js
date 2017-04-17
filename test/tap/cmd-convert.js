@@ -73,10 +73,10 @@ test('xsvd convert',
       const { code, stdout, stderr } = await Common.xsvdCli([
         'convert'
       ])
-    // Check exit code.
+      // Check exit code.
       t.equal(code, CliExitCodes.ERROR.SYNTAX, 'exit code')
       const errLines = stderr.split(/\r?\n/)
-    // console.log(errLines)
+      // console.log(errLines)
       t.ok(errLines.length === 3, 'has two errors')
       if (errLines.length === 3) {
         t.match(errLines[0], 'Mandatory \'--file\' not found.',
@@ -101,12 +101,12 @@ test('xsvd convert -h',
         'convert',
         '-h'
       ])
-    // Check exit code.
+      // Check exit code.
       t.equal(code, 0, 'exit code')
       const outLines = stdout.split(/\r?\n/)
       t.ok(outLines.length > 9, 'has enough output')
       if (outLines.length > 9) {
-      // console.log(outLines)
+        // console.log(outLines)
         t.equal(outLines[1], 'Convert an ARM SVD file from XML to JSON',
         'has title')
         t.equal(outLines[2], 'Usage: xsvd convert [options...] ' +
@@ -115,7 +115,7 @@ test('xsvd convert -h',
         t.match(outLines[5], '  --file <file>  ', 'has --file')
         t.match(outLines[6], '  --output <file>  ', 'has --output')
       }
-    // There should be no error messages.
+      // There should be no error messages.
       t.equal(stderr, '', 'stderr empty')
     } catch (err) {
       t.fail(err.message)
@@ -133,18 +133,18 @@ test('xsvd con -h',
         'con',
         '-h'
       ])
-    // Check exit code.
+      // Check exit code.
       t.equal(code, 0, 'exit code')
       const outLines = stdout.split(/\r?\n/)
       t.ok(outLines.length > 9, 'has enough output')
       if (outLines.length > 9) {
-      // console.log(outLines)
+        // console.log(outLines)
         t.equal(outLines[1], 'Convert an ARM SVD file from XML to JSON',
         'has title')
         t.equal(outLines[2], 'Usage: xsvd convert [options...] ' +
         '--file <file> --output <file>', 'has Usage')
       }
-    // There should be no error messages.
+      // There should be no error messages.
       t.equal(stderr, '', 'stderr empty')
     } catch (err) {
       t.fail(err.message)
@@ -165,9 +165,9 @@ test('xsvd con --file xxx --output yyy',
         '--output',
         'yyy'
       ])
-    // Check exit code.
+      // Check exit code.
       t.equal(code, CliExitCodes.ERROR.INPUT, 'exit code')
-    // There should be no output.
+      // There should be no output.
       t.equal(stdout, '', 'stdout empty')
       t.match(stderr, 'ENOENT: no such file or directory', 'ENOENT')
     } catch (err) {
@@ -208,12 +208,12 @@ test('xsvd con --file STM32F0x0.svd --output STM32F0x0.json',
         '--output',
         outPath
       ])
-    // Check exit code.
+      // Check exit code.
       t.equal(code, 0, 'exit code')
       t.equal(stdout, '', 'no output')
-    // console.log(stdout)
+      // console.log(stdout)
       t.equal(stderr, '', 'no errors')
-    // console.log(stderr)
+      // console.log(stderr)
 
       const fileContent = await fs.readFilePromise(outPath)
       t.ok(fileContent, 'read in')
@@ -239,12 +239,12 @@ test('xsvd con --file STM32F0x0.svd --output STM32F0x0.json -v',
         outPath,
         '-v'
       ])
-    // Check exit code.
+      // Check exit code.
       t.equal(code, 0, 'exit code')
       t.match(stdout, 'Done.', 'done message')
-    // console.log(stdout)
+      // console.log(stdout)
       t.equal(stderr, '', 'no errors')
-    // console.log(stderr)
+      // console.log(stderr)
     } catch (err) {
       t.fail(err.message)
     }
@@ -265,10 +265,36 @@ test('xsvd con --file STM32F0x0.svd --output ro/STM32F0x0.json -v',
       ])
       // Check exit code.
       t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
-    // Output should go up to Writing...
-    // console.log(stdout)
+      // Output should go up to Writing...
+      // console.log(stdout)
       t.match(stdout, 'Writing ', 'up to writing')
-    // console.log(stderr)
+      // console.log(stderr)
+      t.match(stderr, 'EACCES: permission denied', 'EACCES')
+    } catch (err) {
+      t.fail(err.message)
+    }
+    t.end()
+  })
+
+test('xsvd con -C ... --file STM32F0x0.svd --output ro/STM32F0x0.json -v',
+  async (t) => {
+    try {
+      const { code, stdout, stderr } = await Common.xsvdCli([
+        'con',
+        '-C',
+        workFolder,
+        '--file',
+        filePath,
+        '--output',
+        'ro/STM32F0x0.json',
+        '-v'
+      ])
+      // Check exit code.
+      t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
+      // Output should go up to Writing...
+      // console.log(stdout)
+      t.match(stdout, 'Writing ', 'up to writing')
+      // console.log(stderr)
       t.match(stderr, 'EACCES: permission denied', 'EACCES')
     } catch (err) {
       t.fail(err.message)

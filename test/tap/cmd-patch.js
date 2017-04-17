@@ -73,10 +73,10 @@ test('xsvd patch',
       const { code, stdout, stderr } = await Common.xsvdCli([
         'patch'
       ])
-    // Check exit code.
+      // Check exit code.
       t.equal(code, CliExitCodes.ERROR.SYNTAX, 'exit 1')
       const errLines = stderr.split(/\r?\n/)
-    // console.log(errLines)
+      // console.log(errLines)
       t.ok(errLines.length === 4, 'has three errors')
       if (errLines.length === 4) {
         t.match(errLines[0], 'Mandatory \'--file\' not found.',
@@ -103,12 +103,12 @@ test('xsvd patch -h',
         'patch',
         '-h'
       ])
-    // Check exit code.
+      // Check exit code.
       t.equal(code, 0, 'exit code')
       const outLines = stdout.split(/\r?\n/)
       t.ok(outLines.length > 12, 'has enough output')
       if (outLines.length > 12) {
-      // console.log(outLines)
+        // console.log(outLines)
         t.equal(outLines[1], 'Modify SVD JSON file using a JSON patch',
         'has title')
         t.equal(outLines[2], 'Usage: xsvd patch [options...] ' +
@@ -124,7 +124,7 @@ test('xsvd patch -h',
         t.match(outLines[10], '  --remove <name>  ',
         'has --remove')
       }
-    // There should be no error messages.
+      // There should be no error messages.
       t.equal(stderr, '', 'stderr empty')
     } catch (err) {
       t.fail(err.message)
@@ -142,18 +142,18 @@ test('xsvd p -h',
         'p',
         '-h'
       ])
-    // Check exit code.
+      // Check exit code.
       t.equal(code, 0, 'exit code')
       const outLines = stdout.split(/\r?\n/)
       t.ok(outLines.length > 12, 'has enough output')
       if (outLines.length > 12) {
-      // console.log(outLines)
+        // console.log(outLines)
         t.equal(outLines[1], 'Modify SVD JSON file using a JSON patch',
         'has title')
         t.equal(outLines[2], 'Usage: xsvd patch [options...] ' +
         '--file <file> --patch <file> --output <file>', 'has Usage')
       }
-    // There should be no error messages.
+      // There should be no error messages.
       t.equal(stderr, '', 'stderr empty')
     } catch (err) {
       t.fail(err.message)
@@ -200,9 +200,9 @@ test('xsvd p --file xxx --patch yyy --output zzz',
         '--output',
         'zzz'
       ])
-    // Check exit code.
+      // Check exit code.
       t.equal(code, CliExitCodes.ERROR.INPUT, 'exit code')
-    // There should be no output.
+      // There should be no output.
       t.equal(stdout, '', 'stdout empty')
       t.match(stderr, 'ENOENT: no such file or directory', 'ENOENT')
     } catch (err) {
@@ -237,11 +237,14 @@ test('xsvd p --file STM32F0x0-xsvd.json --patch yyy --output zzz',
     t.end()
   })
 
+/**
+ * Test if output file is generated.
+ */
 test('xsvd p --file STM32F0x0-xsvd.json --patch STM32F0x0-patch.json ' +
-  '--output STM32F0x0-out.json',
+  '--output STM32F0x0-qemu.json',
   async (t) => {
     try {
-      const outPath = path.resolve(workFolder, 'STM32F0x0-out.json')
+      const outPath = path.resolve(workFolder, 'STM32F0x0-qemu.json')
       const { code, stdout, stderr } = await Common.xsvdCli([
         'p',
         '--file',
@@ -264,11 +267,14 @@ test('xsvd p --file STM32F0x0-xsvd.json --patch STM32F0x0-patch.json ' +
     t.end()
   })
 
+/**
+ * Test output error.
+ */
 test('xsvd p --file STM32F0x0-xsvd.json --patch STM32F0x0-patch.json ' +
-  '--output ro/STM32F0x0-out.json',
+  '--output ro/STM32F0x0-qemu.json',
   async (t) => {
     try {
-      const outPath = path.resolve(workFolder, 'ro', 'STM32F0x0-out.json')
+      const outPath = path.resolve(workFolder, 'ro', 'STM32F0x0-qemu.json')
       const { code, stdout, stderr } = await Common.xsvdCli([
         'p',
         '--file',
@@ -281,9 +287,40 @@ test('xsvd p --file STM32F0x0-xsvd.json --patch STM32F0x0-patch.json ' +
       ])
       // Check exit code.
       t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
-    // Output should go up to Writing...
+      // Output should go up to Writing...
       t.match(stdout, 'Writing ', 'up to writing')
-    // console.log(stderr)
+      // console.log(stderr)
+      t.match(stderr, 'EACCES: permission denied', 'EACCES')
+    } catch (err) {
+      t.fail(err.message)
+    }
+    t.end()
+  })
+
+/**
+ * Test output error.
+ */
+test('xsvd p -C ... --file STM32F0x0-xsvd.json --patch STM32F0x0-patch.json ' +
+  '--output ro/STM32F0x0-qemu.json',
+  async (t) => {
+    try {
+      const { code, stdout, stderr } = await Common.xsvdCli([
+        'p',
+        '-C',
+        workFolder,
+        '--file',
+        filePath,
+        '--patch',
+        patchPath,
+        '--output',
+        'ro/STM32F0x0-qemu.json',
+        '-v'
+      ])
+      // Check exit code.
+      t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
+      // Output should go up to Writing...
+      t.match(stdout, 'Writing ', 'up to writing')
+      // console.log(stderr)
       t.match(stderr, 'EACCES: permission denied', 'EACCES')
     } catch (err) {
       t.fail(err.message)
