@@ -62,6 +62,10 @@ if (!fs.chmodPromise) {
   fs.chmodPromise = Promisifier.promisify(fs.chmod)
 }
 
+if (!fs.statPromise) {
+  fs.statPromise = Promisifier.promisify(fs.stat)
+}
+
 // ----------------------------------------------------------------------------
 
 /**
@@ -210,6 +214,8 @@ test('xsvd code -C ... --file STM32F0x0-qemu.json',
         workFolder,
         '--file',
         filePath,
+        '--dest',
+        'code-folder',
         '-v'
       ])
       // Check exit code.
@@ -218,6 +224,19 @@ test('xsvd code -C ... --file STM32F0x0-qemu.json',
       // console.log(stdout)
       t.equal(stderr, '', 'no errors')
       // console.log(stderr)
+
+      const codePath = path.resolve(workFolder, 'code-folder')
+
+      try {
+        const stat = await fs.statPromise(codePath)
+        if (stat.isDirectory()) {
+          t.pass('dest folder')
+        } else {
+          t.fail('dest folder')
+        }
+      } catch (err) {
+        t.fail('dest folder')
+      }
     } catch (err) {
       t.fail(err.message)
     }
@@ -242,7 +261,7 @@ if (os.platform() !== 'win32') {
           '-v'
         ])
         // Check exit code.
-        console.log(code)
+        // console.log(code)
         t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
         t.match(stdout, 'Peripherals:', 'peripherals message')
         // console.log(stdout)
