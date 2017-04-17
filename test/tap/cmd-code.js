@@ -37,10 +37,30 @@
 
 // ----------------------------------------------------------------------------
 
+const path = require('path')
+const os = require('os')
+const fs = require('fs')
+
 // The `[node-tap](http://www.node-tap.org)` framework.
 const test = require('tap').test
 
 const Common = require('../common.js').Common
+const Promisifier = require('../../lib/utils/asy.js')
+
+// ES6: `import { CliExitCodes } from 'cli-start-options'
+const CliExitCodes = require('@ilg/cli-start-options').CliExitCodes
+
+// ----------------------------------------------------------------------------
+
+const fixtures = path.resolve(__dirname, '../fixtures')
+const workFolder = path.resolve(os.tmpdir(), 'xsvd-code')
+const rimraf = Promisifier.promisify(require('rimraf'))
+const mkdirp = Promisifier.promisify(require('mkdirp'))
+
+// Promisified functions from the Node.js callbacks library.
+if (!fs.chmodPromise) {
+  fs.chmodPromise = Promisifier.promisify(fs.chmod)
+}
 
 // ----------------------------------------------------------------------------
 
@@ -134,5 +154,129 @@ test('xsvd cod -h', async (t) => {
   }
   t.end()
 })
+
+const filePath = path.resolve(workFolder, 'STM32F0x0-qemu.json')
+const readOnlyFolder = path.resolve(workFolder, 'ro')
+
+test('unpack',
+  async (t) => {
+    const tgzPath = path.resolve(fixtures, 'STM32F0x0-code.tgz')
+    try {
+      await Common.extractTgz(tgzPath, workFolder)
+      t.pass('STM32F0x0-code.tgz unpacked into ' + workFolder)
+      await fs.chmodPromise(filePath, 0o444)
+      t.pass('chmod xsvd')
+      await mkdirp(readOnlyFolder)
+      t.pass('mkdir ro')
+      await fs.chmodPromise(readOnlyFolder, 0o444)
+      t.pass('chmod ro')
+    } catch (err) {
+      t.fail(err)
+    }
+    t.end()
+  })
+
+/**
+ * Test if mising input file.
+ */
+test('xsvd code --file xxx',
+  async (t) => {
+    try {
+      const { code, stdout, stderr } = await Common.xsvdCli([
+        'code',
+        '--file',
+        'xxx'
+      ])
+      // Check exit code.
+      t.equal(code, CliExitCodes.ERROR.INPUT, 'exit code')
+      // There should be no output.
+      t.equal(stdout, '', 'stdout empty')
+      t.match(stderr, 'ENOENT: no such file or directory', 'ENOENT')
+    } catch (err) {
+      t.fail(err.message)
+    }
+    t.end()
+  })
+
+/**
+ * Test if output files are generated.
+ */
+test('xsvd code --file STM32F0x0-qemu.json',
+  async (t) => {
+    try {
+      const { code, stdout, stderr } = await Common.xsvdCli([
+        'code',
+        '--file',
+        filePath,
+        '-v'
+      ])
+      // Check exit code.
+      t.equal(code, 0, 'exit code')
+      t.match(stdout, 'Done.', 'done message')
+      // console.log(stdout)
+      t.equal(stderr, '', 'no errors')
+      // console.log(stderr)
+    } catch (err) {
+      t.fail(err.message)
+    }
+    t.end()
+  })
+
+test('xsvd code --file STM32F0x0-qemu.json --dest ro',
+  async (t) => {
+    try {
+      const outPath = path.resolve(workFolder, 'ro')
+      const { code, stdout, stderr } = await Common.xsvdCli([
+        'code',
+        '--file',
+        filePath,
+        '--dest',
+        outPath,
+        '-v'
+      ])
+      // Check exit code.
+      t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
+      t.match(stdout, 'Peripherals:', 'peripherals message')
+      // console.log(stdout)
+      t.match(stderr, 'EACCES: permission denied', 'EACCES')
+      // console.log(stderr)
+    } catch (err) {
+      t.fail(err.message)
+    }
+    t.end()
+  })
+
+test('xsvd code -C ... --file STM32F0x0-qemu.json --dest ro',
+  async (t) => {
+    try {
+      const { code, stdout, stderr } = await Common.xsvdCli([
+        'code',
+        '-C',
+        workFolder,
+        '--file',
+        filePath,
+        '--dest',
+        'ro',
+        '-v'
+      ])
+      // Check exit code.
+      t.equal(code, CliExitCodes.ERROR.OUTPUT, 'exit code')
+      t.match(stdout, 'Peripherals:', 'peripherals message')
+      // console.log(stdout)
+      t.match(stderr, 'EACCES: permission denied', 'EACCES')
+      // console.log(stderr)
+    } catch (err) {
+      t.fail(err.message)
+    }
+    t.end()
+  })
+
+test('cleanup',
+  async (t) => {
+    await fs.chmodPromise(filePath, 0o666)
+    t.pass('chmod xsvd')
+    await rimraf(workFolder)
+    t.pass('tmpdir removed')
+  })
 
 // ----------------------------------------------------------------------------
