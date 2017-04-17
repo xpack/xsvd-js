@@ -261,6 +261,13 @@ test('xsvd p --file STM32F0x0-xsvd.json --patch STM32F0x0-patch.json ' +
       // console.log(stdout)
       t.equal(stderr, '', 'no errors')
       // console.log(stderr)
+
+      const fileContent = await fs.readFilePromise(outPath)
+      t.ok(fileContent, 'read in')
+      const json = JSON.parse(fileContent.toString())
+      t.ok(json, 'json parsed')
+      t.match(json.warning, 'DO NOT EDIT!', 'has warning')
+      t.ok(json.device, 'has device')
     } catch (err) {
       t.fail(err.message)
     }
