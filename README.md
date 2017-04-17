@@ -2,6 +2,7 @@
 [![license](https://img.shields.io/github/license/xpack/xsvd-js.svg)](https://github.com/xpack/xsvd-js/blob/xpack/LICENSE) 
 [![Standard](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com/)
 [![Travis](https://img.shields.io/travis/xpack/xsvd-js.svg?label=linux)](https://travis-ci.org/xpack/xsvd-js)
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/g5kiu2us9wnmpgpf?svg=true)](https://ci.appveyor.com/project/ilg-ul/xsvd-js)
 
 ## The xPack SVD manager
 
