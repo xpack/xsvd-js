@@ -224,7 +224,11 @@ Done.
 $ git clone https://github.com/xpack/xsvd-js.git xsvd-js.git
 $ cd xsvd-js.git
 $ npm install
+$ sudo npm link 
+$ ls -l /usr/local/lib/node_modules/
 ```
+
+A link to the development folder should be present in the system `node_modules` folder, and also a link to the `xsvd` executable should be available system wide.
 
 ### Tests
 
