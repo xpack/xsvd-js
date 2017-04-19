@@ -8,23 +8,43 @@
 
 A Node.js CLI application to manage [SVD](http://www.keil.com/pack/doc/CMSIS/SVD/html/index.html) files.
 
+## Purpose
+
+The main purpose of the `xsvd` tool is to generate the peripheral descriptions in [GNU ARM Eclipse QEMU](http://gnuarmeclipse.github.io/qemu/).
+
+The process takes three steps, each with a separate command: 
+
+- convert the vendor SDV file from XML to JSON
+- patch it with mandatory information
+- generate the QEMU support code
+
 ## Prerequisites
 
 A recent [Node.js](https://nodejs.org) (>7.x), since the ECMAScript 6 class syntax is used.
 
-If this is the first time you hear about Node.js, download and install the binaries specific for your platform without any concerns, they're just fine.
+If this is your first encounter with `npm`, you need to install the [node.js](https://nodejs.org/) JavScript run-time. The process is straighforward and does not polute the system locations significantly; just pick the current version, download the package suitable for your platform and install it as usual. The result is a binary program called `node` that can be used to execute JavaScript code from the terminal, and a link called `npm`, pointing to the `npm-cli.js` script, which is part of the node module that implements the npm functionality. On Windows, it is recommended to first install the [Git for Windows](https://git-scm.com/download/win) package.
 
 ## Easy install
 
-The module is available as [**xsvd**](https://www.npmjs.com/package/xsvd) from the public repository; use `npm` to install it:
+The module is available as [**xsvd**](https://www.npmjs.com/package/xsvd) from the public repository; with `npm` already available, installing `xsvd` is quite easy:
 
 ```bash
-$ npm install xsvd --global
+$ sudo npm install xsvd --global
 ```
+
+On Windows, global packages are installed in the user home folder, and do not require `sudo`.
 
 The module provides the `xsvd` executable, which is a possible reason to install it globally.
 
 The development repository is available from the GitHub [xpack/xsvd-js](https://github.com/xpack/xsvd-js) project.
+
+To remove `xsvd`, the command is similar:
+
+```bash
+$ sudo npm uninstall xsvd --global
+```
+
+(On Windows `sudo` is not required`).
 
 ## User info
 
@@ -382,7 +402,7 @@ All files              |    58.01 |     39.2 |     66.3 |    58.01 |            
 
 ### Continuous Integration (CI)
 
-The continuous integration tests are performed via [Travis CI](https://travis-ci.org/xpack/xsvd-js) and [AppVeyor](https://ci.appveyor.com/project/ilg-ul/xsvd-js).
+The continuous integration tests are performed via [Travis CI](https://travis-ci.org/xpack/xsvd-js) (for POSIX) and [AppVeyor](https://ci.appveyor.com/project/ilg-ul/xsvd-js) (for Windows).
 
 ### Standard compliance
 

@@ -45,7 +45,7 @@ const fs = require('fs')
 const test = require('tap').test
 
 const Common = require('../common.js').Common
-const Promisifier = require('../../lib/utils/asy.js')
+const Promisifier = require('@ilg/es6-promisifier').Promisifier
 
 // ES6: `import { CliExitCodes } from 'cli-start-options'
 const CliExitCodes = require('@ilg/cli-start-options').CliExitCodes

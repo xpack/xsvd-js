@@ -45,7 +45,7 @@ const fs = require('fs')
 const test = require('tap').test
 
 const Common = require('../common.js').Common
-const Promisifier = require('../../lib/utils/asy.js')
+const Promisifier = require('@ilg/es6-promisifier').Promisifier
 
 // ES6: `import { CliExitCodes } from 'cli-start-options'
 const CliExitCodes = require('@ilg/cli-start-options').CliExitCodes
@@ -77,7 +77,7 @@ test('xsvd code', async (t) => {
       'code'
     ])
     // Check exit code.
-    t.equal(code, 1, 'exit 1')
+    t.equal(code, CliExitCodes.ERROR.SYNTAX, 'exit ok')
     const errLines = stderr.split(/\r?\n/)
     // console.log(errLines)
     t.ok(errLines.length === 2, 'has one error')
@@ -102,7 +102,7 @@ test('xsvd code -h', async (t) => {
       '-h'
     ])
     // Check exit code.
-    t.equal(code, 0, 'exit 0')
+    t.equal(code, CliExitCodes.SUCCESS, 'exit ok')
     const outLines = stdout.split(/\r?\n/)
     t.ok(outLines.length > 13, 'has enough output')
     if (outLines.length > 13) {
@@ -142,7 +142,7 @@ test('xsvd cod -h', async (t) => {
       '-h'
     ])
     // Check exit code.
-    t.equal(code, 0, 'exit 0')
+    t.equal(code, CliExitCodes.SUCCESS, 'exit ok')
     const outLines = stdout.split(/\r?\n/)
     t.ok(outLines.length > 13, 'has enough output')
     if (outLines.length > 13) {
