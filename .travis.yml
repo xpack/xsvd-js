@@ -37,18 +37,18 @@ notifications:
 
 # -----------------------------------------------------------------------------
 
-before_install:
-  - bash "${SCRIPT}" before_install
+# before_install:
+#  - ...
 
 # Skip the install step.
 # install: true
 
-before_script:
-  - bash "${SCRIPT}" before_script
+# before_script:
+#  - ...
 
 script:
-  - bash "${SCRIPT}" script
-
+  - npm test
+  
 # Unused, kept for just in case.
 
 # after_success:
