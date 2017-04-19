@@ -1,6 +1,6 @@
 {
   "name": "xsvd",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "The xPack SVD manager",
   "main": "./index.js",
   "directories": {
@@ -39,8 +39,8 @@
   },
   "homepage": "https://github.com/xpack/xsvd-js",
   "dependencies": {
-   "@ilg/es6-promisifier": "~0.1.1",
-   "@ilg/cli-start-options": "~0.1.0",
+    "@ilg/es6-promisifier": "~0.1.1",
+    "@ilg/cli-start-options": "~0.1.0",
     "xml2js": "~0.4.17",
     "shopify-liquid": "~1.7.7"
   },
