@@ -13,6 +13,9 @@ version: "{branch}.{build}"
 # Do not build on tags (GitHub and BitBucket)
 skip_tags: true
 
+cache:
+  - node_modules # NPM packages
+
 # Install scripts. (runs after repo cloning)
 install:
   # Get the latest stable version of Node.js or io.js

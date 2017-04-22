@@ -404,6 +404,8 @@ All files              |    58.01 |     39.2 |     66.3 |    58.01 |            
 
 The continuous integration tests are performed via [Travis CI](https://travis-ci.org/xpack/xsvd-js) (for POSIX) and [AppVeyor](https://ci.appveyor.com/project/ilg-ul/xsvd-js) (for Windows).
 
+To speed up things, the `node_modules` folder is cached between builds.
+
 ### Standard compliance
 
 The module uses ECMAScript 6 class definitions.

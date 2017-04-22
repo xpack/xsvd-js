@@ -35,6 +35,10 @@ notifications:
     on_success: always # default: change
     on_failure: always # default: always
 
+cache:
+  directories:
+    - node_modules # NPM packages
+
 # -----------------------------------------------------------------------------
 
 # before_install:
