@@ -41,11 +41,6 @@
 const test = require('tap').test
 const path = require('path')
 
-// The Mocha-like DSL http://www.node-tap.org/mochalike/
-// require('tap').mochaGlobals()
-// const should = require('should') // eslint-disable-line no-unused-vars
-// /* global describe, context, it */
-
 const Common = require('../common.js').Common
 
 // ES6: `import { CliApplication } from 'cli-start-options.js'
@@ -56,61 +51,52 @@ const CliApplication = require('@ilg/cli-start-options').CliApplication
 let pack = null
 const rootPath = path.dirname(path.dirname(__dirname))
 
-test('setup', async (t) => {
-  // Read in the package.json, to later compare version.
-  pack = await CliApplication.readPackageJson(rootPath)
-  t.ok(pack, 'package ok')
-  t.ok(pack.version.length > 0, 'version length > 0')
-  t.pass(`package ${pack.name}@${pack.version}`)
-  t.end()
-})
-
-test('xsvd --version (module call)', async (t) => {
-  try {
-    const { code, stdout, stderr } = await Common.xsvdLib([
-      '--version'
-    ])
-    // Check exit code.
-    t.equal(code, 0, 'exit 0')
-    // Check if version matches the package.
-    // Beware, the stdout string has a new line terminator.
-    t.equal(stdout, pack.version + '\n', 'version ok')
-    // There should be no error messages.
-    t.equal(stderr, '', 'stderr empty')
-  } catch (err) {
-    console.log(err.stack)
-    t.fail(err.message)
-  }
-  t.end()
-})
-
-test('xsvd xyz (module call)', async (t) => {
-  try {
-    const { code, stdout, stderr } = await Common.xsvdLib([
-      'xyz'
-    ])
-    // Check exit code.
-    t.equal(code, 1, 'exit 1')
-    t.match(stdout, 'Usage: xsvd <command>', 'has Usage')
-    // There should be one error message.
-    t.match(stderr, 'Command \'xyz\' not supported.', 'error')
-  } catch (err) {
-    console.log(err.stack)
-    t.fail(err.message)
-  }
-  t.end()
-})
-
-/*
-describe('setup', () => {
-  context('when reading package.json', async function () {
+test('setup',
+  async (t) => {
     // Read in the package.json, to later compare version.
-    pack = await CliApplication.readPackageJson()
-    it('json object exists', () => { pack.should.not.equal(null) })
-    it('version string is not empty', () => {
-      pack.version.should.be.type('string').and.not.be.empty() })
+    pack = await CliApplication.readPackageJson(rootPath)
+    t.ok(pack, 'package ok')
+    t.ok(pack.version.length > 0, 'version length > 0')
+    t.pass(`package ${pack.name}@${pack.version}`)
+    t.end()
   })
-})
-*/
+
+test('xsvd --version (module call)',
+  async (t) => {
+    try {
+      const { code, stdout, stderr } = await Common.xsvdLib([
+        '--version'
+      ])
+      // Check exit code.
+      t.equal(code, 0, 'exit 0')
+      // Check if version matches the package.
+      // Beware, the stdout string has a new line terminator.
+      t.equal(stdout, pack.version + '\n', 'version ok')
+      // There should be no error messages.
+      t.equal(stderr, '', 'stderr empty')
+    } catch (err) {
+      console.log(err.stack)
+      t.fail(err.message)
+    }
+    t.end()
+  })
+
+test('xsvd xyz (module call)',
+  async (t) => {
+    try {
+      const { code, stdout, stderr } = await Common.xsvdLib([
+        'xyz'
+      ])
+      // Check exit code.
+      t.equal(code, 1, 'exit 1')
+      t.match(stdout, 'Usage: xsvd <command>', 'has Usage')
+      // There should be one error message.
+      t.match(stderr, 'Command \'xyz\' not supported.', 'error')
+    } catch (err) {
+      console.log(err.stack)
+      t.fail(err.message)
+    }
+    t.end()
+  })
 
 // ----------------------------------------------------------------------------

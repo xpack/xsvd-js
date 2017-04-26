@@ -52,112 +52,115 @@ const CliExitCodes = require('@ilg/cli-start-options').CliExitCodes
 
 // ----------------------------------------------------------------------------
 
+// Promisify individual functions.
+const rimrafPromise = Promisifier.promisify(require('rimraf'))
+const mkdirpPromise = Promisifier.promisify(require('mkdirp'))
+
+// Promisify functions from the Node.js callbacks library.
+// New functions have similar names, but suffixed with `Promise`.
+Promisifier.promisifyInPlace(fs, 'chmod')
+Promisifier.promisifyInPlace(fs, 'stat')
+
+// ----------------------------------------------------------------------------
+
 const fixtures = path.resolve(__dirname, '../fixtures')
 const workFolder = path.resolve(os.tmpdir(), 'xsvd-code')
-const rimraf = Promisifier.promisify(require('rimraf'))
-const mkdirp = Promisifier.promisify(require('mkdirp'))
-
-// Promisified functions from the Node.js callbacks library.
-if (!fs.chmodPromise) {
-  fs.chmodPromise = Promisifier.promisify(fs.chmod)
-}
-
-if (!fs.statPromise) {
-  fs.statPromise = Promisifier.promisify(fs.stat)
-}
 
 // ----------------------------------------------------------------------------
 
 /**
  * Test if with empty line fails with mandatory error and displays help.
  */
-test('xsvd code', async (t) => {
-  try {
-    const { code, stdout, stderr } = await Common.xsvdCli([
-      'code'
-    ])
-    // Check exit code.
-    t.equal(code, CliExitCodes.ERROR.SYNTAX, 'exit ok')
-    const errLines = stderr.split(/\r?\n/)
-    // console.log(errLines)
-    t.ok(errLines.length === 2, 'has one error')
-    if (errLines.length === 2) {
-      t.match(errLines[0], 'Mandatory \'--file\' not found.',
-        'has --file error')
+test('xsvd code',
+  async (t) => {
+    try {
+      const { code, stdout, stderr } = await Common.xsvdCli([
+        'code'
+      ])
+      // Check exit code.
+      t.equal(code, CliExitCodes.ERROR.SYNTAX, 'exit ok')
+      const errLines = stderr.split(/\r?\n/)
+      // console.log(errLines)
+      t.ok(errLines.length === 2, 'has one error')
+      if (errLines.length === 2) {
+        t.match(errLines[0], 'Mandatory \'--file\' not found.',
+          'has --file error')
+      }
+      t.match(stdout, 'Usage: xsvd code [options...]', 'has Usage')
+    } catch (err) {
+      t.fail(err.message)
     }
-    t.match(stdout, 'Usage: xsvd code [options...]', 'has Usage')
-  } catch (err) {
-    t.fail(err.message)
-  }
-  t.end()
-})
+    t.end()
+  })
 
 /**
  * Test if help content includes code options.
  */
-test('xsvd code -h', async (t) => {
-  try {
-    const { code, stdout, stderr } = await Common.xsvdCli([
-      'code',
-      '-h'
-    ])
-    // Check exit code.
-    t.equal(code, CliExitCodes.SUCCESS, 'exit ok')
-    const outLines = stdout.split(/\r?\n/)
-    t.ok(outLines.length > 13, 'has enough output')
-    if (outLines.length > 13) {
-      t.equal(outLines[1], 'Generate QEMU peripheral source files for ' +
-        'a given family', 'has title')
-      t.equal(outLines[2], 'Usage: xsvd code [options...] ' +
-        '--file <file> [--dest <folder>]', 'has Usage')
-      t.equal(outLines[3], '                 [--vendor-prefix <string>] ' +
-        '[--device-family <string>]', 'has usage 2nd line')
-      t.equal(outLines[4], '                 [--device-selector <string>]',
-        'has usage 3rd line')
-      t.match(outLines[6], 'Code options:', 'has code options')
-      t.match(outLines[7], '  --file <file>  ', 'has --file')
-      t.match(outLines[8], '  --dest <folder>  ', 'has --dest')
-      t.match(outLines[9], '  --vendor-prefix <string>  ',
-        'has --vendor-prefix')
-      t.match(outLines[10], '  --device-family <string>  ',
-        'has --device-family')
-      t.match(outLines[11], '  --device-selector <string>  ',
-        'has --device-selector')
+test('xsvd code -h',
+  async (t) => {
+    try {
+      const { code, stdout, stderr } = await Common.xsvdCli([
+        'code',
+        '-h'
+      ])
+      // Check exit code.
+      t.equal(code, CliExitCodes.SUCCESS, 'exit ok')
+      const outLines = stdout.split(/\r?\n/)
+      t.ok(outLines.length > 13, 'has enough output')
+      if (outLines.length > 13) {
+        t.equal(outLines[1], 'Generate QEMU peripheral source files for ' +
+          'a given family', 'has title')
+        t.equal(outLines[2], 'Usage: xsvd code [options...] ' +
+          '--file <file> [--dest <folder>]', 'has Usage')
+        t.equal(outLines[3], '                 [--vendor-prefix <string>] ' +
+          '[--device-family <string>]', 'has usage 2nd line')
+        t.equal(outLines[4], '                 [--device-selector <string>]',
+          'has usage 3rd line')
+        t.match(outLines[6], 'Code options:', 'has code options')
+        t.match(outLines[7], '  --file <file>  ', 'has --file')
+        t.match(outLines[8], '  --dest <folder>  ', 'has --dest')
+        t.match(outLines[9], '  --vendor-prefix <string>  ',
+          'has --vendor-prefix')
+        t.match(outLines[10], '  --device-family <string>  ',
+          'has --device-family')
+        t.match(outLines[11], '  --device-selector <string>  ',
+          'has --device-selector')
+      }
+      // There should be no error messages.
+      t.equal(stderr, '', 'stderr empty')
+    } catch (err) {
+      t.fail(err.message)
     }
-    // There should be no error messages.
-    t.equal(stderr, '', 'stderr empty')
-  } catch (err) {
-    t.fail(err.message)
-  }
-  t.end()
-})
+    t.end()
+  })
 
 /**
  * Test if partial command recognised and expanded.
  */
-test('xsvd cod -h', async (t) => {
-  try {
-    const { code, stdout, stderr } = await Common.xsvdCli([
-      'cod',
-      '-h'
-    ])
-    // Check exit code.
-    t.equal(code, CliExitCodes.SUCCESS, 'exit ok')
-    const outLines = stdout.split(/\r?\n/)
-    t.ok(outLines.length > 13, 'has enough output')
-    if (outLines.length > 13) {
-      t.equal(outLines[1], 'Generate QEMU peripheral source files for ' +
-        'a given family', 'has title')
-      t.equal(outLines[2], 'Usage: xsvd code [options...] ' +
-        '--file <file> [--dest <folder>]', 'has Usage')
+test('xsvd cod -h',
+  async (t) => {
+    try {
+      const { code, stdout, stderr } = await Common.xsvdCli([
+        'cod',
+        '-h'
+      ])
+      // Check exit code.
+      t.equal(code, CliExitCodes.SUCCESS, 'exit ok')
+      const outLines = stdout.split(/\r?\n/)
+      t.ok(outLines.length > 13, 'has enough output')
+      if (outLines.length > 13) {
+        t.equal(outLines[1], 'Generate QEMU peripheral source files for ' +
+          'a given family', 'has title')
+        t.equal(outLines[2], 'Usage: xsvd code [options...] ' +
+          '--file <file> [--dest <folder>]', 'has Usage')
+      }
+      // There should be no error messages.
+      t.equal(stderr, '', 'stderr empty')
+    } catch (err) {
+      t.fail(err.message)
     }
-    // There should be no error messages.
-    t.equal(stderr, '', 'stderr empty')
-  } catch (err) {
-    t.fail(err.message)
-  }
-  t.end()
-})
+    t.end()
+  })
 
 const filePath = path.resolve(workFolder, 'STM32F0x0-qemu.json')
 const readOnlyFolder = path.resolve(workFolder, 'ro')
@@ -170,7 +173,7 @@ test('unpack',
       t.pass('STM32F0x0-code.tgz unpacked into ' + workFolder)
       await fs.chmodPromise(filePath, 0o444)
       t.pass('chmod xsvd')
-      await mkdirp(readOnlyFolder)
+      await mkdirpPromise(readOnlyFolder)
       t.pass('mkdir ro')
       await fs.chmodPromise(readOnlyFolder, 0o444)
       t.pass('chmod ro')
@@ -280,7 +283,7 @@ test('cleanup',
     t.pass('chmod xsvd')
     await fs.chmodPromise(readOnlyFolder, 0o666)
     t.pass('chmod ro')
-    await rimraf(workFolder)
+    await rimrafPromise(workFolder)
     t.pass('tmpdir removed')
   })
 

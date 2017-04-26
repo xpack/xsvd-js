@@ -52,15 +52,18 @@ const CliExitCodes = require('@ilg/cli-start-options').CliExitCodes
 
 // ----------------------------------------------------------------------------
 
+// Promisify individual functions.
+const rimrafPromise = Promisifier.promisify(require('rimraf'))
+const mkdirpPromise = Promisifier.promisify(require('mkdirp'))
+
+// Promisify functions from the Node.js callbacks library.
+// New functions have similar names, but suffixed with `Promise`.
+Promisifier.promisifyInPlace(fs, 'chmod')
+
+// ----------------------------------------------------------------------------
+
 const fixtures = path.resolve(__dirname, '../fixtures')
 const workFolder = path.resolve(os.tmpdir(), 'xsvd-patch')
-const rimraf = Promisifier.promisify(require('rimraf'))
-const mkdirp = Promisifier.promisify(require('mkdirp'))
-
-// Promisified functions from the Node.js callbacks library.
-if (!fs.chmodPromise) {
-  fs.chmodPromise = Promisifier.promisify(fs.chmod)
-}
 
 // ----------------------------------------------------------------------------
 
@@ -175,7 +178,7 @@ test('unpack',
       t.pass('chmod xsvd')
       await fs.chmodPromise(patchPath, 0o444)
       t.pass('chmod patch')
-      await mkdirp(readOnlyFolder)
+      await mkdirpPromise(readOnlyFolder)
       t.pass('mkdir ro')
       await fs.chmodPromise(readOnlyFolder, 0o444)
       t.pass('chmod ro')
@@ -343,7 +346,7 @@ test('cleanup',
     t.pass('chmod patch')
     await fs.chmodPromise(readOnlyFolder, 0o666)
     t.pass('chmod ro')
-    await rimraf(workFolder)
+    await rimrafPromise(workFolder)
     t.pass('tmpdir removed')
   })
 
