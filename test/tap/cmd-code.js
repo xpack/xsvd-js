@@ -223,7 +223,7 @@ test('xsvd code -C ... --file STM32F0x0-qemu.json',
       ])
       // Check exit code.
       t.equal(code, 0, 'exit code')
-      t.match(stdout, 'Done.', 'done message')
+      t.match(stdout, 'Done ', 'done message')
       // console.log(stdout)
       t.equal(stderr, '', 'no errors')
       // console.log(stderr)
