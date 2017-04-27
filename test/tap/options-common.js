@@ -132,7 +132,7 @@ test('xsvd -d (spawn)',
       t.ok(stdout.length > 0, 'has stdout')
       // Matching the whole string also checks that
       // the colour changes are not used.
-      t.match(stdout, 'DEBUG: start arg0:', 'has debug')
+      t.match(stdout, 'debug: start arg0:', 'has debug')
       // There should be no error messages.
       t.equal(stderr, '', 'stderr empty')
     } catch (err) {

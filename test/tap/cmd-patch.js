@@ -82,11 +82,11 @@ test('xsvd patch',
       // console.log(errLines)
       t.ok(errLines.length === 4, 'has three errors')
       if (errLines.length === 4) {
-        t.match(errLines[0], 'Mandatory \'--file\' not found.',
+        t.match(errLines[0], 'Mandatory \'--file\' not found',
           'has --file error')
-        t.match(errLines[1], 'Mandatory \'--patch\' not found.',
+        t.match(errLines[1], 'Mandatory \'--patch\' not found',
           'has --patch error')
-        t.match(errLines[2], 'Mandatory \'--output\' not found.',
+        t.match(errLines[2], 'Mandatory \'--output\' not found',
           'has --output error')
       }
       t.match(stdout, 'Usage: xsvd patch [options...]', 'has Usage')

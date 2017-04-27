@@ -160,7 +160,7 @@ test('xsvd -i (spawn)',
             t.test('code', (t) => {
               t.match(stdout, 'Usage: xsvd code [options...] --file <file> ' +
                 '[--dest <folder>]', 'has code Usage')
-              t.match(stdout, 'Mandatory \'--file\' not found.',
+              t.match(stdout, 'Mandatory \'--file\' not found',
                 '--file not found')
               t.end()
             })

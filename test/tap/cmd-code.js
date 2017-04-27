@@ -83,7 +83,7 @@ test('xsvd code',
       // console.log(errLines)
       t.ok(errLines.length === 2, 'has one error')
       if (errLines.length === 2) {
-        t.match(errLines[0], 'Mandatory \'--file\' not found.',
+        t.match(errLines[0], 'Mandatory \'--file\' not found',
           'has --file error')
       }
       t.match(stdout, 'Usage: xsvd code [options...]', 'has Usage')
