@@ -201,7 +201,8 @@ test('xsvd p --file xxx --patch yyy --output zzz',
         '--patch',
         'yyy',
         '--output',
-        'zzz'
+        'zzz',
+        '-q'
       ])
       // Check exit code.
       t.equal(code, CliExitCodes.ERROR.INPUT, 'exit code')
@@ -227,7 +228,8 @@ test('xsvd p --file STM32F0x0-xsvd.json --patch yyy --output zzz',
         '--patch',
         'yyy',
         '--output',
-        'zzz'
+        'zzz',
+        '-q'
       ])
       // Check exit code.
       t.equal(code, CliExitCodes.ERROR.INPUT, 'exit code')

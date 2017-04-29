@@ -192,7 +192,8 @@ test('xsvd code --file xxx',
       const { code, stdout, stderr } = await Common.xsvdCli([
         'code',
         '--file',
-        'xxx'
+        'xxx',
+        '-q'
       ])
       // Check exit code.
       t.equal(code, CliExitCodes.ERROR.INPUT, 'exit code')

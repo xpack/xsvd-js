@@ -166,7 +166,8 @@ test('xsvd con --file xxx --output yyy',
         '--file',
         'xxx',
         '--output',
-        'yyy'
+        'yyy',
+        '-q'
       ])
       // Check exit code.
       t.equal(code, CliExitCodes.ERROR.INPUT, 'exit code')
@@ -209,7 +210,8 @@ test('xsvd con --file STM32F0x0.svd --output STM32F0x0.json',
         '--file',
         filePath,
         '--output',
-        outPath
+        outPath,
+        '-q'
       ])
       // Check exit code.
       t.equal(code, 0, 'exit code')
