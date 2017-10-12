@@ -247,7 +247,7 @@ test('xsvd con --file STM32F0x0.svd --output STM32F0x0.json -v',
       ])
       // Check exit code.
       t.equal(code, 0, 'exit code')
-      t.match(stdout, 'Done ', 'done message')
+      t.match(stdout, 'completed in', 'done message')
       // console.log(stdout)
       t.equal(stderr, '', 'no errors')
       // console.log(stderr)

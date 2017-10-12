@@ -262,7 +262,7 @@ test('xsvd p --file STM32F0x0-xsvd.json --patch STM32F0x0-patch.json ' +
       ])
       // Check exit code.
       t.equal(code, 0, 'exit code')
-      t.match(stdout, 'Done ', 'done message')
+      t.match(stdout, 'completed in', 'done message')
       // console.log(stdout)
       t.equal(stderr, '', 'no errors')
       // console.log(stderr)
@@ -297,7 +297,7 @@ test('xsvd p -C ... --file STM32F0x0-xsvd.json --patch STM32F0x0-patch.json ' +
       ])
       // Check exit code.
       t.equal(code, 0, 'exit code')
-      t.match(stdout, 'Done ', 'done message')
+      t.match(stdout, 'completed in', 'done message')
       // console.log(stdout)
       t.equal(stderr, '', 'no errors')
       // console.log(stderr)
