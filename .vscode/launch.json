@@ -378,6 +378,53 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "xsvd gen --help",
+      "program": "${workspaceRoot}/bin/xsvd.js",
+      "stopOnEntry": true,
+      "args": [
+        "gen",
+        "-dd",
+        "--help"
+      ],
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": null,
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "internalConsole",
+      "sourceMaps": false
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "xsvd gen-header file",
+      "program": "${workspaceRoot}/bin/xsvd.js",
+      "stopOnEntry": true,
+      "args": [
+        "gen",
+        "-dd",
+        "--file",
+        "/Users/ilg/My Files/MacBookPro Projects/uOS/xpacks/sifive-coreplex-devices.git/xsvd/fe310-g000-xsvd.json"
+      ],
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": null,
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "internalConsole",
+      "sourceMaps": false
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "xsvd (-i)",
       "program": "${workspaceRoot}/bin/xsvd.js",
       "stopOnEntry": true,

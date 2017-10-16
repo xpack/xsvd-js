@@ -1,0 +1,104 @@
+/*
+ * This file is part of the µOS++ distribution
+ *   (http://micro-os-plus.github.io).
+ * Copyright (c) 2017 Liviu Ionescu.
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom
+ * the Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+#ifndef {{ vm.macroGuard }}
+#define {{ vm.macroGuard }}
+
+// ----------------------------------------------------------------------------
+
+// Peripheral access layer header file for {{ vm.deviceName }} from {{ vm.vendorName}}.
+// Generated from {{ vm.inputFileName }}@{{ vm.inputFileVersion }} with {{ vm.toolName }}@{{ vm.toolVersion }} on {{ vm.isoDate }}.
+
+// ----------------------------------------------------------------------------
+
+#if defined(__cplusplus)
+extern "C"
+{
+#endif
+{% for typedef in vm.typedefs -%}
+
+// ----------------------------------------------------------------------------
+  {%- if typedef.description -%}
+// {{ typedef.description }}
+  {%- endif -%}
+
+typedef struct {
+  {%- for member in typedef.members -%}
+    {%- if member.unionMembers -%}
+  union {
+      {%- for unionMember in member.unionMembers -%}
+        {%- if unionMember.description -%}
+      // {{ unionMember.description }}
+        {%- endif -%}
+      {{ unionMember.access }} {{ unionMember.type }} {{ unionMember.name }};  {% if unionMember.address %}// {{ unionMember.address }} {% endif %}
+      {%- endfor -%}
+  }
+    {%- else -%}
+      {%- if member.description -%}
+  // {{ member.description }}
+      {%- endif -%}
+  {{ member.access }} {{ member.type }} {{ member.name }};  {% if member.address %}// {{ member.address }} {% endif %}
+    {%- endif -%}
+  {%- endfor -%}
+} {{ typedef.name }};
+{%- endfor -%}
+{%- for struct in vm.structs -%}
+
+// ----------------------------------------------------------------------------
+// Struct '{{ struct.name }}' positions & masks
+  {%- for member in struct.members -%}
+
+// {{ member.name }}
+    {%- for def in member.defs -%}
+#define {{ def.name }}  ({{ def.value }})
+    {%- endfor -%}
+  {%- endfor -%}
+{%- endfor -%}
+
+// ----------------------------------------------------------------------------
+// Peripherals memory map.
+
+{%- for memDef in vm.memDefs -%}
+#define {{ memDef.name }}  {{ memDef.value }}
+{%- endfor -%}
+
+// ----------------------------------------------------------------------------
+// Peripherals declarations.
+
+{%- for periphDef in vm.periphDefs -%}
+#define {{ periphDef.name }}  {{ periphDef.value }}
+{%- endfor -%}
+
+// ----------------------------------------------------------------------------
+
+#if defined(__cplusplus)
+}
+#endif
+
+// ----------------------------------------------------------------------------
+
+#endif /* {{ vm.macroGuard }} */
