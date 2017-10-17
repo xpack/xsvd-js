@@ -30,7 +30,7 @@
 
 // ----------------------------------------------------------------------------
 
-// Peripheral access layer header file for {{ vm.deviceName }} from {{ vm.vendorName}}.
+// Device peripherals header file for {{ vm.deviceName }} from {{ vm.vendorName}}.
 // Generated from {{ vm.inputFileName }}@{{ vm.inputFileVersion }} with {{ vm.toolName }}@{{ vm.toolVersion }} on {{ vm.isoDate }}.
 
 // ----------------------------------------------------------------------------
@@ -51,20 +51,14 @@ typedef struct {
     {%- if member.unionMembers -%}
   union {
       {%- for unionMember in member.unionMembers -%}
-        {%- if unionMember.description -%}
-      // {{ unionMember.description }}
-        {%- endif -%}
-      {{ unionMember.access }} {{ unionMember.type }} {{ unionMember.name }};  {% if unionMember.address %}// {{ unionMember.address }} {% endif %}
+      {{ unionMember.access }} {{ unionMember.type }} {{ unionMember.name }};  // {{ unionMember.address }}: {{ unionMember.description }}
       {%- endfor -%}
   }
     {%- else -%}
-      {%- if member.description -%}
-  // {{ member.description }}
-      {%- endif -%}
-  {{ member.access }} {{ member.type }} {{ member.name }};  {% if member.address %}// {{ member.address }} {% endif %}
+  {% if member.access %}{{ member.access }} {% endif %}{{ member.type }} {{ member.name }};  // {{ member.address }}: {{ member.description }}
     {%- endif -%}
   {%- endfor -%}
-} {{ typedef.name }};
+} {{ typedef.name }}; // {{ typedef.lastAddress }}
 {%- endfor -%}
 {%- for struct in vm.structs -%}
 
@@ -83,7 +77,7 @@ typedef struct {
 // Peripherals memory map.
 
 {%- for memDef in vm.memDefs -%}
-#define {{ memDef.name }}  {{ memDef.value }}
+#define {{ memDef.name }}  {{ memDef.value }}UL
 {%- endfor -%}
 
 // ----------------------------------------------------------------------------
