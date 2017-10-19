@@ -54,6 +54,10 @@ extern "C"
  * @addtogroup device-peripheral-registers
  * @{
  */
+
+#define IO__
+#define I__
+#define O__
 {% for typedef in vm.typedefs -%}
 
 // ----------------------------------------------------------------------------
@@ -67,16 +71,59 @@ extern "C"
 typedef struct {
   {%- for member in typedef.members -%}
     {%- if member.unionMembers -%}
+
   union {
       {%- for unionMember in member.unionMembers -%}
-      {{ unionMember.access }} {{ unionMember.type }} {{ unionMember.name }};  /**< {{ unionMember.address }}: {{ unionMember.description }} */
+        {%- if unionMember.fields -%}
+
+       union {
+         {% if unionMember.access %}{{ unionMember.access }} {% endif %}{{ unionMember.type }} {{ unionMember.name }}{{ unionMember.arraySize }};{% if unionMember.address or unionMember.description %}  /**< {{ unionMember.address }}: {{ unionMember.description }} */{% endif %}
+
+         struct {
+          {%- for field in unionMember.fields -%}
+           {% if field.access %}{{ field.access }} {% endif %}{{ unionMember.type }} {{ field.name }} : {{ field.width }};{% if field.description %}  /**< [{{ field.positionLast }}..{{ field.position }}] {{ field.description }} */{% endif %}
+          {%- endfor -%}
+         } {{ unionMember.name }}_bits{{ unionMember.arraySize }};
+       };
+      {%- else -%}
+  {% if unionMember.access %}{{ unionMember.access }} {% endif %}{{ unionMember.type }} {{ unionMember.name }}{{ unionMember.arraySize }};{% if unionMember.address or unionMember.description %}  /**< {{ unionMember.address }}: {{ unionMember.description }} */{% endif %}
+      {%- endif -%}
       {%- endfor -%}
   }
     {%- else -%}
-  {% if member.access %}{{ member.access }} {% endif %}{{ member.type }} {{ member.name }};  /**< {{ member.address }}: {{ member.description }} */
+      {%- if member.fields -%}
+
+       union {
+         {% if member.access %}{{ member.access }} {% endif %}{{ member.type }} {{ member.name }}{{ member.arraySize }};{% if member.address or member.description %}  /**< {{ member.address }}: {{ member.description }} */{% endif %}
+
+         struct {
+        {%- for field in member.fields -%}
+           {% if field.access %}{{ field.access }} {% endif %}{{ member.type }} {{ field.name }} : {{ field.width }};{% if field.description %}  /**< [{{ field.positionLast }}..{{ field.position }}] {{ field.description }} */{% endif %}
+        {%- endfor -%}
+         } {{ member.name }}_bits{{ member.arraySize }};
+       };
+      {%- else -%}
+  {% if member.access %}{{ member.access }} {% endif %}{{ member.type }} {{ member.name }}{{ member.arraySize }};{% if member.address or member.description %}  /**< {{ member.address }}: {{ member.description }} */{% endif %}
+      {%- endif -%}
     {%- endif -%}
   {%- endfor -%}
 } {{ typedef.name }}; // {{ typedef.lastAddress }}
+{%- endfor -%}
+{%- for enum in vm.enums -%}
+
+// ----------------------------------------------------------------------------
+  {%- if enum.description -%}
+
+/**
+ * @brief {{ enum.description }}.
+ */
+  {%- endif -%}
+
+typedef enum {
+  {%- for member in enum.members -%}
+  {{ member.name }} = {{ member.value }}, /**< {{ member.description }} */
+  {%- endfor -%}
+} {{ enum.name }};
 {%- endfor -%}
 {%- for struct in vm.structs -%}
 
@@ -86,8 +133,11 @@ typedef struct {
 
 // Register '{{ member.name }}'.
     {%- for def in member.defs -%}
-#define {{ def.name }}_Pos  ({{ def.position }}ul)
-#define {{ def.name }}_Msk  ({{ def.mask }}ul)
+#define {{ def.name }}_position  ({{ def.position }}ul)
+#define {{ def.name }}_mask  ({{ def.mask }}ul << {{ def.position }}ul)  /**< [{{ def.positionLast }}..{{ def.position }}] {{ def.description }} */
+      {%- for val in def.values -%}
+#define {{ val.name}}  ({{ val.value }}ul << {{ def.position }}ul)  /**< {{ val.description }} */
+      {%- endfor -%}
     {%- endfor -%}
   {%- endfor -%}
 {%- endfor -%}
