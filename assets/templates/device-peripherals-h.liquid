@@ -30,10 +30,16 @@
 
 // ----------------------------------------------------------------------------
 
-// Device peripherals header file for {{ vm.deviceName }} from {{ vm.vendorName}}.
-// Generated from {{ vm.inputFileName }}@{{ vm.inputFileVersion }} with {{ vm.toolName }}@{{ vm.toolVersion }} on {{ vm.isoDate }}.
+/**
+ * @brief Device peripherals header file for {{ vm.deviceName }} from {{ vm.vendorName}}.
+ * @version {{ vm.fileVersion }}
+ * @date {{ vm.isoDate }}
+ * @note Generated from {{ vm.inputFileName }}@{{ vm.inputFileVersion }} with {{ vm.toolName }}@{{ vm.toolVersion }}.
+ */
 
 // ----------------------------------------------------------------------------
+
+#include <stdint.h>
 
 #if defined(__cplusplus)
 extern "C"
@@ -55,9 +61,9 @@ extern "C"
  * @{
  */
 
-#define IO__
-#define I__
-#define O__
+#define IO__ volatile
+#define I__ volatile
+#define O__ volatile
 {% for typedef in vm.typedefs -%}
 
 // ----------------------------------------------------------------------------
@@ -98,7 +104,7 @@ typedef struct {
 
          struct {
         {%- for field in member.fields -%}
-           {% if field.access %}{{ field.access }} {% endif %}{{ member.type }} {{ field.name }} : {{ field.width }};{% if field.description %}  /**< [{{ field.positionLast }}..{{ field.position }}] {{ field.description }} */{% endif %}
+           {% if field.access %}{{ field.access }} {% endif %}{{ member.type }}{% if field.name %} {{ field.name }}{% endif %} : {{ field.width }};{% if field.description %}  /**< [{{ field.positionLast }}..{{ field.position }}] {{ field.description }} */{% endif %}
         {%- endfor -%}
          } {{ member.name }}_bits{{ member.arraySize }};
        };
@@ -135,9 +141,15 @@ typedef enum {
     {%- for def in member.defs -%}
 #define {{ def.name }}_position  ({{ def.position }}ul)
 #define {{ def.name }}_mask  ({{ def.mask }}ul << {{ def.position }}ul)  /**< [{{ def.positionLast }}..{{ def.position }}] {{ def.description }} */
-      {%- for val in def.values -%}
+      {%- if def.values -%}
+        {%- for val in def.values -%}
 #define {{ val.name}}  ({{ val.value }}ul << {{ def.position }}ul)  /**< {{ val.description }} */
-      {%- endfor -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- if def.width == 1 -%}
+#define {{ def.name }}  (1ul << {{ def.position }}ul)
+        {%- endif -%}
+      {%- endif -%}
     {%- endfor -%}
   {%- endfor -%}
 {%- endfor -%}
@@ -146,7 +158,7 @@ typedef enum {
 // Peripherals memory map.
 
 {%- for memDef in vm.memDefs -%}
-#define {{ memDef.name }}  {{ memDef.value }}ul
+#define {{ memDef.name }}  ({{ memDef.value }}ul)
 {%- endfor -%}
 
 // ----------------------------------------------------------------------------
@@ -161,6 +173,35 @@ typedef enum {
 /**
  * @}
  */ /* End of group device-peripheral-registers */
+
+{%- if vm.interrupts -%}
+/** 
+ * @addtogroup device-interrupts
+ * @{
+ */
+
+// ----------------------------------------------------------------------------
+
+/**
+ * @brief Interrupt Numbers.
+ */
+
+typedef enum {
+  {%- for interrupt in vm.interrupts -%}
+  {{ vm.headerInterruptPrefix }}{{ interrupt.name }} = {{ interrupt.value }}, /**< {{ interrupt.description }} */
+  {%- endfor -%}  
+} {{ vm.headerInterruptEnumPrefix }}enum_t;
+
+#define {{ vm.headerInterruptEnumPrefixUC }}PRIORITY_BITS  ({{ vm.priorityBits }}u)
+#define {{ vm.headerInterruptEnumPrefixUC }}PRIORITIES_NUMBER  ({{ vm.numPriorities }}u)
+#define {{ vm.headerInterruptEnumPrefixUC }}NUMBER  ({{ vm.numInterrupts }}u)
+
+// ----------------------------------------------------------------------------
+
+/**
+ * @}
+ */ /* End of group device-interrupts */
+{%- endif -%}
 
 /**
  * @} 
