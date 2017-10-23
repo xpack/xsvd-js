@@ -32,13 +32,14 @@
 // ----------------------------------------------------------------------------
 
 const assert = require('assert')
-const fs = require('fs')
-const zlib = require('zlib')
 const tar = require('tar')
 
 const spawn = require('child_process').spawn
 const Console = require('console').Console
 const Writable = require('stream').Writable
+
+const Promisifier = require('@ilg/es6-promisifier').Promisifier
+const mkdirpPromise = Promisifier.promisify(require('mkdirp'))
 
 // ES6: `import { CliHelp } from './utils/cli-helps.js'
 const Xsvd = require('../lib/main.js').Xsvd
@@ -155,14 +156,10 @@ class Common {
    * @returns {undefined} Nothing.
    */
   static async extractTgz (tgzPath, destPath) {
-    return new Promise((resolve, reject) => {
-      fs.createReadStream(tgzPath)
-        .on('error', (er) => { reject(er) })
-        .pipe(zlib.createGunzip())
-        .on('error', (er) => { reject(er) })
-        .pipe(tar.extract({ cwd: destPath }))
-        .on('error', (er) => { reject(er) })
-        .on('end', () => { resolve() })
+    await mkdirpPromise(destPath)
+    return tar.x({
+      file: tgzPath,
+      cwd: destPath
     })
   }
 }
