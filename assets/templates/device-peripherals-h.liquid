@@ -183,6 +183,15 @@ typedef enum {
     {%- endfor -%}
   {%- endfor -%}
 {%- endfor -%}
+{%- for periph in vm.periphOffsets -%}
+
+// ----------------------------------------------------------------------------
+// Peripheral '{{ periph.name }}' offsets.
+
+  {%- for offset in periph.offsets -%}
+#define {{ offset.name }}_OFFSET ({{ offset.value }}ul){% if offset.address or offset.description %}  /**< {{ offset.address }}: {{ offset.description }} */{% endif %}
+  {%- endfor -%}
+{%- endfor -%}
 
 // ----------------------------------------------------------------------------
 // Peripherals memory map.
