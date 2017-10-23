@@ -169,8 +169,8 @@ typedef enum {
 
 // Register '{{ member.name }}'.
     {%- for def in member.defs -%}
-#define {{ def.name }}_position  ({{ def.position }}ul)
-#define {{ def.name }}_mask  ({{ def.mask }}ul << {{ def.position }}ul)  /**< [{{ def.positionLast }}..{{ def.position }}] {{ def.description }} */
+#define {{ def.name }}_POSITION  ({{ def.position }}ul)
+#define {{ def.name }}_MASK  ({{ def.mask }}ul << {{ def.position }}ul)  /**< [{{ def.positionLast }}..{{ def.position }}] {{ def.description }} */
       {%- if def.values -%}
         {%- for val in def.values -%}
 #define {{ val.name}}  ({{ val.value }}ul << {{ def.position }}ul)  /**< {{ val.description }} */
