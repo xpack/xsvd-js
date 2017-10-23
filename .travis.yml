@@ -17,7 +17,8 @@ sudo: false
 # can do so in the `before_install` stage of the build.
 language: node_js
 node_js:
-  - "node" 
+  - "node"
+  - "7"
 
 # https://docs.travis-ci.com/user/customizing-the-build/#Git-Clone-Depth
 git:
@@ -27,7 +28,7 @@ git:
 # https://docs.travis-ci.com/user/environment-variables/
 env:
   global:
-    - SCRIPT="scripts/travis.sh"
+    # - SCRIPT="scripts/travis.sh"
 
 # https://docs.travis-ci.com/user/notifications/#Configuring-email-notifications
 notifications:
@@ -38,6 +39,10 @@ notifications:
 cache:
   directories:
     - node_modules # NPM packages
+
+branches:
+  except:
+    - /^v\d+\.\d+(\.\d+)?([-.]\d+)?$/
 
 # -----------------------------------------------------------------------------
 
