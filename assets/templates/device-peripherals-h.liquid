@@ -57,6 +57,35 @@ extern "C"
  * @{
  */
 
+{%- if vm.interrupts -%}
+/** 
+ * @addtogroup device-interrupts
+ * @{
+ */
+
+// ----------------------------------------------------------------------------
+
+/**
+ * @brief Interrupt Numbers.
+ */
+
+typedef enum {
+  {%- for interrupt in vm.interrupts -%}
+  {{ vm.headerInterruptPrefix }}{{ interrupt.name }} = {{ interrupt.value }}, /**< {{ interrupt.description }} */
+  {%- endfor -%}  
+} {{ vm.headerInterruptEnumPrefix }}enum_t;
+
+#define {{ vm.headerInterruptEnumPrefixUC }}PRIORITY_BITS  ({{ vm.priorityBits }}u)
+#define {{ vm.headerInterruptEnumPrefixUC }}PRIORITIES_NUMBER  ({{ vm.numPriorities }}u)
+#define {{ vm.headerInterruptEnumPrefixUC }}NUMBER  ({{ vm.numInterrupts }}u)
+
+// ----------------------------------------------------------------------------
+
+/**
+ * @}
+ */ /* End of group device-interrupts */
+{%- endif -%}
+
 /** 
  * @addtogroup device-peripheral-registers
  * @{
@@ -174,35 +203,6 @@ typedef enum {
 /**
  * @}
  */ /* End of group device-peripheral-registers */
-
-{%- if vm.interrupts -%}
-/** 
- * @addtogroup device-interrupts
- * @{
- */
-
-// ----------------------------------------------------------------------------
-
-/**
- * @brief Interrupt Numbers.
- */
-
-typedef enum {
-  {%- for interrupt in vm.interrupts -%}
-  {{ vm.headerInterruptPrefix }}{{ interrupt.name }} = {{ interrupt.value }}, /**< {{ interrupt.description }} */
-  {%- endfor -%}  
-} {{ vm.headerInterruptEnumPrefix }}enum_t;
-
-#define {{ vm.headerInterruptEnumPrefixUC }}PRIORITY_BITS  ({{ vm.priorityBits }}u)
-#define {{ vm.headerInterruptEnumPrefixUC }}PRIORITIES_NUMBER  ({{ vm.numPriorities }}u)
-#define {{ vm.headerInterruptEnumPrefixUC }}NUMBER  ({{ vm.numInterrupts }}u)
-
-// ----------------------------------------------------------------------------
-
-/**
- * @}
- */ /* End of group device-interrupts */
-{%- endif -%}
 
 /**
  * @} 
