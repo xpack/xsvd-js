@@ -43,3 +43,4 @@ jspm_packages
 
 # VS Code
 vscode.mac.command
+package-lock.json
