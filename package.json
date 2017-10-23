@@ -49,7 +49,7 @@
     "mkdirp": "~0.5.1",
     "rimraf": "~2.6.2",
     "standard": "~10.0.3",
-    "tar": "~4.0.1",
+    "tar": "~4.0.2",
     "tap": "~10.7.2"
   },
   "peerDependencies": {},
