@@ -113,7 +113,7 @@ typedef struct {
         {%- if unionMember.fields -%}
 
        union {
-         {% if unionMember.access %}{{ unionMember.access }} {% endif %}{{ unionMember.type }} {{ unionMember.name }}{{ unionMember.arraySize }};{% if unionMember.address or unionMember.description %}  /**< {{ unionMember.address }}: {{ unionMember.description }} */{% endif %}
+         {% if unionMember.access %}{{ unionMember.access }} {% endif %}{{ unionMember.type }} {{ unionMember.name }}{{ unionMember.arraySize }};{% if unionMember.address or unionMember.description %}  /**< @{{ unionMember.address }}: {{ unionMember.description }} */{% endif %}
 
          struct {
           {%- for field in unionMember.fields -%}
@@ -122,7 +122,7 @@ typedef struct {
          } {{ unionMember.name }}_bits{{ unionMember.arraySize }};
        };
       {%- else -%}
-  {% if unionMember.access %}{{ unionMember.access }} {% endif %}{{ unionMember.type }} {{ unionMember.name }}{{ unionMember.arraySize }};{% if unionMember.address or unionMember.description %}  /**< {{ unionMember.address }}: {{ unionMember.description }} */{% endif %}
+  {% if unionMember.access %}{{ unionMember.access }} {% endif %}{{ unionMember.type }} {{ unionMember.name }}{{ unionMember.arraySize }};{% if unionMember.address or unionMember.description %}  /**< @{{ unionMember.address }}: {{ unionMember.description }} */{% endif %}
       {%- endif -%}
       {%- endfor -%}
   }
@@ -130,7 +130,7 @@ typedef struct {
       {%- if member.fields -%}
 
        union {
-         {% if member.access %}{{ member.access }} {% endif %}{{ member.type }} {{ member.name }}{{ member.arraySize }};{% if member.address or member.description %}  /**< {{ member.address }}: {{ member.description }} */{% endif %}
+         {% if member.access %}{{ member.access }} {% endif %}{{ member.type }} {{ member.name }}{{ member.arraySize }};{% if member.address or member.description %}  /**< @{{ member.address }}: {{ member.description }} */{% endif %}
 
          struct {
         {%- for field in member.fields -%}
@@ -139,7 +139,7 @@ typedef struct {
          } {{ member.name }}_bits{{ member.arraySize }};
        };
       {%- else -%}
-  {% if member.access %}{{ member.access }} {% endif %}{{ member.type }} {{ member.name }}{{ member.arraySize }};{% if member.address or member.description %}  /**< {{ member.address }}: {{ member.description }} */{% endif %}
+  {% if member.access %}{{ member.access }} {% endif %}{{ member.type }} {{ member.name }}{{ member.arraySize }};{% if member.address or member.description %}  /**< @{{ member.address }}: {{ member.description }} */{% endif %}
       {%- endif -%}
     {%- endif -%}
   {%- endfor -%}
