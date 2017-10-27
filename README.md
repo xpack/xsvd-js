@@ -283,7 +283,7 @@ $ npm test
 
 A typical test result looks like:
 
-```
+```console
 $ npm run test
 
 > xsvd@0.1.10 test /Users/ilg/My Files/MacBookPro Projects/xPack/npm-modules/xsvd-js.git
@@ -304,7 +304,7 @@ total ............................................. 176/176
 
 To run a specific test with more verbose output, use `npm run tap`:
 
-```
+```console
 $ npm run tap test/tap/cmd-convert.js
 
 > xsvd@0.1.10 tap /Users/ilg/My Files/MacBookPro Projects/xPack/npm-modules/xsvd-js.git
@@ -383,7 +383,7 @@ Coverage tests are a good indication on how much of the source files is exercise
 
 To run the coverage tests, use `npm run test-coverage`:
 
-```
+```console
 $ npm run test-coverage
 
 > xsvd@0.1.10 test-coverage /Users/ilg/My Files/MacBookPro Projects/xPack/npm-modules/xsvd-js.git
@@ -436,7 +436,7 @@ Known and accepted exceptions:
 
 To manually fix compliance with the style guide (where possible):
 
-```
+```console
 $ npm run fix
 
 > xsvd@0.1.10 fix /Users/ilg/My Files/MacBookPro Projects/xPack/npm-modules/xsvd-js.git
@@ -450,7 +450,7 @@ The documentation metadata follows the [JSdoc](http://usejsdoc.org) tags.
 
 To enforce checking at file level, add the following comments right after the `use strict`:
 
-```
+```js
 'use strict'
 /* eslint valid-jsdoc: "error" */
 /* eslint max-len: [ "error", 80, { "ignoreUrls": true } ] */
