@@ -10,13 +10,10 @@ A Node.js CLI application to manage [SVD](http://www.keil.com/pack/doc/CMSIS/SVD
 
 ## Purpose
 
-The main purpose of the `xsvd` tool is to generate the peripheral descriptions in [GNU ARM Eclipse QEMU](http://gnuarmeclipse.github.io/qemu/).
+The `xsvd` tool is intended to:
 
-The process takes three steps, each with a separate command: 
-
-- convert the vendor SDV file from XML to JSON
-- patch it with mandatory information
-- generate the QEMU support code
+* generate device peripheral headers for RISC-V devices
+* generate the peripheral descriptions in [GNU ARM Eclipse QEMU](http://gnu-mcu-eclipse.github.io/qemu/).
 
 ## Prerequisites
 
@@ -81,6 +78,13 @@ Bug reports: <https://github.com/xpack/xsvd-js/issues>
 ```
 
 As shown, the `xsvd` application has multiple functionality, via several subcommands.
+
+
+To generate QEMU peripheral descriptions, there are three steps, each with a separate command: 
+
+- convert the vendor SDV file from XML to JSON
+- patch it with mandatory information
+- generate the QEMU support code
 
 ### Convert an ARM SVD file from XML to JSON
 
