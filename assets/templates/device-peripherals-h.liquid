@@ -76,8 +76,8 @@ typedef enum {
 } {{ vm.headerInterruptEnumPrefix }}enum_t;
 
 #define {{ vm.headerInterruptEnumPrefixUC }}PRIORITY_BITS  ({{ vm.priorityBits }}u)
-#define {{ vm.headerInterruptEnumPrefixUC }}PRIORITIES_NUMBER  ({{ vm.numPriorities }}u)
-#define {{ vm.headerInterruptEnumPrefixUC }}NUMBER  ({{ vm.numInterrupts }}u)
+#define {{ vm.headerInterruptEnumPrefixUC }}PRIORITY_LEVELS  ({{ vm.numPriorities }}u)
+#define {{ vm.headerInterruptEnumPrefixUC }}NUMBEROF  ({{ vm.numInterrupts }}u)
 
 // ----------------------------------------------------------------------------
 
