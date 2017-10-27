@@ -241,6 +241,20 @@ Source file 'STM32F0x1/wwdg.c' written.
 Done.
 ```
 
+## Generate device peripherals header
+
+To generate the RISC-V peripheral headers, use the **xsvd** file describing the devices.
+
+```console
+$ xsvd code --file e51arty-xsvd.json --dest default-folder/e51arty
+Generate device peripheral header files from an XSVD file
+
+Reading '/Users/ilg/My Files/MacBookPro Projects/uOS/xpacks/sifive-devices-xpack.git/xsvd/e51arty-xsvd.json'...
+Header file 'default-folder/e51arty/device-peripherals.h' written.
+
+'xsvd gen' completed in 6.295 sec.
+```
+
 ## Developer info
 
 ### Git repo
