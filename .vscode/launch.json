@@ -361,7 +361,7 @@
         "validate",
         "-dd",
         "--babu",
-        "/Users/ilg/My Files/MacBookPro Projects/uOS/xpacks/sifive-coreplex-devices.git/xsvd/fe310-g000-xsvd.json"
+        "/Users/ilg/My Files/MacBookPro Projects/uOS/xpacks/sifive-devices-xpack.git/xsvd/fe310-g000-xsvd.json"
       ],
       "cwd": "${workspaceRoot}",
       "preLaunchTask": null,
@@ -401,14 +401,68 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "xsvd gen-header file",
+      "name": "xsvd gen-header fe310",
       "program": "${workspaceRoot}/bin/xsvd.js",
       "stopOnEntry": true,
       "args": [
         "gen",
         "-dd",
         "--file",
-        "/Users/ilg/My Files/MacBookPro Projects/uOS/xpacks/sifive-coreplex-devices.git/xsvd/fe310-g000-xsvd.json"
+        "/Users/ilg/My Files/MacBookPro Projects/uOS/xpacks/sifive-devices-xpack.git/xsvd/fe310-xsvd.json",
+        "--dest",
+        "default-folder/fe310"
+      ],
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": null,
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "internalConsole",
+      "sourceMaps": false
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "xsvd gen-header e31arty",
+      "program": "${workspaceRoot}/bin/xsvd.js",
+      "stopOnEntry": true,
+      "args": [
+        "gen",
+        "-dd",
+        "--file",
+        "/Users/ilg/My Files/MacBookPro Projects/uOS/xpacks/sifive-devices-xpack.git/xsvd/e31arty-xsvd.json",
+        "--dest",
+        "default-folder/e31arty"
+      ],
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": null,
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "--nolazy"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "internalConsole",
+      "sourceMaps": false
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "xsvd gen-header e51arty",
+      "program": "${workspaceRoot}/bin/xsvd.js",
+      "stopOnEntry": true,
+      "args": [
+        "gen",
+        "-dd",
+        "--file",
+        "/Users/ilg/My Files/MacBookPro Projects/uOS/xpacks/sifive-devices-xpack.git/xsvd/e51arty-xsvd.json",
+        "--dest",
+        "default-folder/e51arty"
       ],
       "cwd": "${workspaceRoot}",
       "preLaunchTask": null,
