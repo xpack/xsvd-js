@@ -28,7 +28,7 @@ If this is your first encounter with `npm`, you need to install the [node.js](ht
 
 The module is available as [**xsvd**](https://www.npmjs.com/package/xsvd) from the public repository; with `npm` already available, installing `xsvd` is quite easy:
 
-```bash
+```console
 $ sudo npm install xsvd --global
 ```
 
@@ -40,7 +40,7 @@ The development repository is available from the GitHub [xpack/xsvd-js](https://
 
 To remove `xsvd`, the command is similar:
 
-```bash
+```console
 $ sudo npm uninstall xsvd --global
 ```
 
@@ -50,7 +50,7 @@ $ sudo npm uninstall xsvd --global
 
 To get an initial glimpse on the program, ask for help:
 
-```
+```console
 $ xsvd --help
 
 The xPack SVD manager
@@ -84,7 +84,7 @@ As shown, the `xsvd` application has multiple functionality, via several subcomm
 
 ### Convert an ARM SVD file from XML to JSON
 
-```
+```console
 $ xsvd convert --help
 
 Convert an ARM SVD file from XML to JSON
@@ -99,7 +99,7 @@ Convert options:
 
 Example
 
-```
+```console
 $ xsvd convert -C ${HOME}/tmp --file STM32F0x1.svd --output STM32F0x1.json --verbose
 Convert an ARM SVD file from XML to JSON
 Reading '/tmp/STM32F0x1.svd'...
@@ -112,7 +112,7 @@ Done.
 
 ### Modify SVD JSON file using a JSON patch
 
-```
+```console
 $ xsvd patch --help
 
 Modify SVD JSON file using a JSON patch
@@ -131,7 +131,7 @@ Patch options:
 
 Example
 
-```
+```console
 $ xsvd patch -C ${HOME}/tmp --file STM32F0x1.json --patch STM32F0x1-patch.json --output STM32F0x1-qemu.json --remove NVIC --verbose
 Modify SVD JSON file using a JSON patch
 Reading '/Users/ilg/tmp/STM32F0x1.json'...
@@ -148,7 +148,7 @@ To generate the QEMU source files, use the patched xSVD file; the header and sou
 
 For STM32 devices, the vendor/family/device definitions can be derived from the SVD device name, and are optional.
 
-```
+```console
 $ xsvd code --help
 
 Generate QEMU peripheral source files for a given family
@@ -168,7 +168,7 @@ Code options:
 
 Example
 
-```
+```console
 $ xsvd code -C ${HOME}/tmp --file STM32F0x1-qemu.json --verbose
 Generate QEMU peripheral source files for a given family
 Reading '/Users/ilg/tmp/STM32F0x1-qemu.json'...
@@ -241,7 +241,7 @@ Done.
 
 ### Git repo
 
-```bash
+```console
 $ git clone https://github.com/xpack/xsvd-js.git xsvd-js.git
 $ cd xsvd-js.git
 $ npm install
@@ -257,7 +257,7 @@ The tests use the [`node-tap`](http://www.node-tap.org) framework (_A Test-Anyth
 
 As for any `npm` package, the standard way to run the project tests is via `npm test`:
 
-```bash
+```console
 $ cd xsvd-js.git
 $ npm install
 $ npm test
