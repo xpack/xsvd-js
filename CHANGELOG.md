@@ -2,6 +2,11 @@
 
 Changes in reverse chronological order.
 
+## v0.2.4 (2017-11-13)
+
+* xsvd/gen-headers: shorten macro guard
+* templates/device-peripherals-h.liquid: use LAST_NUMBER for the number of interrupts
+
 ## v0.2.3 (2017-10-27)
 
 * gen-headers default destination to device.name
