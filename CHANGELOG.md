@@ -2,6 +2,14 @@
 
 Changes in reverse chronological order.
 
+## v0.3.0 (2017-12-12)
+
+* [#2] do nto generate bit fields in headers
+* update for xsvd specs v0.2.4
+  * [#1] use `headerName`
+  * [#3] `enumerations` (plural) instead of `enumeration`
+  * [#4] `supplier` instead of `vendor`
+
 ## v0.2.4 (2017-11-13)
 
 * xsvd/gen-headers: shorten macro guard
