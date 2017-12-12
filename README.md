@@ -6,7 +6,7 @@
 
 ## The xPack SVD manager
 
-A Node.js CLI application to manage [SVD](http://www.keil.com/pack/doc/CMSIS/SVD/html/index.html) files.
+A Node.js CLI application to manage the new [XSVD](https://xpack.github.io/xsvd/files/xsvd-json/) files and the CMSIS [SVD](http://www.keil.com/pack/doc/CMSIS/SVD/html/index.html) files.
 
 ## Purpose
 
@@ -246,18 +246,21 @@ Done.
 To generate the RISC-V peripheral headers, use the **xsvd** file describing the devices.
 
 ```console
-$ xsvd code --file e51arty-xsvd.json --dest default-folder/e51arty
+$ xsvd gen-headers --file xsvd/fe310-xsvd.json --dest include/sifive-devices/fe310
 Generate device peripheral header files from an XSVD file
 
-Reading '/Users/ilg/My Files/MacBookPro Projects/uOS/xpacks/sifive-devices-xpack.git/xsvd/e51arty-xsvd.json'...
-Header file 'default-folder/e51arty/device-peripherals.h' written.
+Reading '/Users/ilg/My Files/MacBookPro Projects/uOS/xpacks/sifive-devices-xpack.git/xsvd/fe310-xsvd.json'...
+Header file 'include/sifive-devices/fe310/device-peripherals.h' written.
 
-'xsvd gen' completed in 6.295 sec.
+'xsvd gen-headers' completed in 294 ms.
+Generate device peripheral header files from an XSVD file
 ```
 
 ## Developer info
 
 ### Git repo
+
+The project is available on [GitHub](https://github.com/xpack/xsvd-js):
 
 ```console
 $ git clone https://github.com/xpack/xsvd-js.git xsvd-js.git
