@@ -32,7 +32,7 @@
 
 /**
  * @brief µOS++ Core - device peripherals header file
- *  for {{ vm.deviceName }} from {{ vm.vendorName}}.
+ *  for {{ vm.deviceName }} from {{ vm.supplierFullName}}.
  * @version {{ vm.fileVersion }}
  * @date {{ vm.isoDate }}
  * @note Generated from {{ vm.inputFileName }}@{{ vm.inputFileVersion }} with {{ vm.toolName }}@{{ vm.toolVersion }}.
@@ -48,7 +48,7 @@ extern "C"
 #endif
 
 /** 
- * @addtogroup {{ vm.vendorKey }}
+ * @addtogroup {{ vm.supplierKey }}
  * @{
  */
 
@@ -110,11 +110,11 @@ typedef struct {
 
   union {
       {%- for unionMember in member.unionMembers -%}
-         {% if unionMember.access %}{{ unionMember.access }} {% endif %}{{ unionMember.type }} {{ unionMember.name }}{{ unionMember.arraySize }};{% if unionMember.address or unionMember.description %}  /**< @{{ unionMember.address }}: {{ unionMember.description }} */{% endif %}
+  {% if unionMember.access %}{{ unionMember.access }} {% endif %}{{ unionMember.type }} {{ unionMember.name }}{{ unionMember.arraySize }};{% if unionMember.address or unionMember.description %}  /**< @{{ unionMember.address }}: {{ unionMember.description }} */{% endif %}
       {%- endfor -%}
   }
     {%- else -%}
-         {% if member.access %}{{ member.access }} {% endif %}{{ member.type }} {{ member.name }}{{ member.arraySize }};{% if member.address or member.description %}  /**< @{{ member.address }}: {{ member.description }} */{% endif %}
+  {% if member.access %}{{ member.access }} {% endif %}{{ member.type }} {{ member.name }}{{ member.arraySize }};{% if member.address or member.description %}  /**< @{{ member.address }}: {{ member.description }} */{% endif %}
     {%- endif -%}
   {%- endfor -%}
 } {{ typedef.name }}; // {{ typedef.lastAddress }}
@@ -193,7 +193,7 @@ typedef enum {
 
 /**
  * @} 
- */ /* End of group {{ vm.vendorKey }} */
+ */ /* End of group {{ vm.supplierKey }} */
 
 #if defined(__cplusplus)
 }
