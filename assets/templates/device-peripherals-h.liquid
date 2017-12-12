@@ -110,37 +110,11 @@ typedef struct {
 
   union {
       {%- for unionMember in member.unionMembers -%}
-        {%- if unionMember.fields -%}
-
-       union {
          {% if unionMember.access %}{{ unionMember.access }} {% endif %}{{ unionMember.type }} {{ unionMember.name }}{{ unionMember.arraySize }};{% if unionMember.address or unionMember.description %}  /**< @{{ unionMember.address }}: {{ unionMember.description }} */{% endif %}
-
-         struct {
-          {%- for field in unionMember.fields -%}
-           {% if field.access %}{{ field.access }} {% endif %}{{ unionMember.type }} {{ field.name }} : {{ field.width }};{% if field.description %}  /**< [{{ field.positionLast }}..{{ field.position }}] {{ field.description }} */{% endif %}
-          {%- endfor -%}
-         } {{ unionMember.name }}_bits{{ unionMember.arraySize }};
-       };
-      {%- else -%}
-  {% if unionMember.access %}{{ unionMember.access }} {% endif %}{{ unionMember.type }} {{ unionMember.name }}{{ unionMember.arraySize }};{% if unionMember.address or unionMember.description %}  /**< @{{ unionMember.address }}: {{ unionMember.description }} */{% endif %}
-      {%- endif -%}
       {%- endfor -%}
   }
     {%- else -%}
-      {%- if member.fields -%}
-
-       union {
          {% if member.access %}{{ member.access }} {% endif %}{{ member.type }} {{ member.name }}{{ member.arraySize }};{% if member.address or member.description %}  /**< @{{ member.address }}: {{ member.description }} */{% endif %}
-
-         struct {
-        {%- for field in member.fields -%}
-           {% if field.access %}{{ field.access }} {% endif %}{{ member.type }}{% if field.name %} {{ field.name }}{% endif %} : {{ field.width }};{% if field.description %}  /**< [{{ field.positionLast }}..{{ field.position }}] {{ field.description }} */{% endif %}
-        {%- endfor -%}
-         } {{ member.name }}_bits{{ member.arraySize }};
-       };
-      {%- else -%}
-  {% if member.access %}{{ member.access }} {% endif %}{{ member.type }} {{ member.name }}{{ member.arraySize }};{% if member.address or member.description %}  /**< @{{ member.address }}: {{ member.description }} */{% endif %}
-      {%- endif -%}
     {%- endif -%}
   {%- endfor -%}
 } {{ typedef.name }}; // {{ typedef.lastAddress }}
